@@ -17,21 +17,23 @@ This app is my solution to meal planning for the week. The user browses recipes 
 ### Models
 
 - User model
-  - Email: String(unique) (index)
-  - Password: Encrypted string
-  - Roles: Array of strings
-  - Menu: Array of Recipe _id's
-  - Grocery list: Array of Ingredient _id's
+  - **Email**: String(unique) (index)
+  - **Password**: Encrypted string
+  - **Roles**: Array of strings
+  - **Menu**: Array of Recipe _id's
+  - **Grocery list**: Array of Ingredient _id's
+
 - Recipe model
-  - Title: String (unique) (index)
-  - Author: User email
-  - Ingredients: Arrays of [number, Ingredient _id] arrays.
-  - Instructions
-  - Prep time
-  - Cuisine
+  - **Title**: String (unique) (index)
+  - **Author**: User email
+  - **Ingredients**: Arrays of [number, Ingredient _id] arrays.
+  - **Instructions**: String
+  - **Prep time**: Array of three integers representing days, hours, and minutes
+  - **Cuisine**: String
+
 - Ingredients model
-  - Name
-  - Plural name
+  - **Name**: String
+  - **Plural name**: String
 
 ### Routes
 
@@ -87,10 +89,10 @@ This app is my solution to meal planning for the week. The user browses recipes 
 
 ## Timeline
 
-By May 30, I would like to have finished the /login routes and the corresponding .
+By May 30, I would like to have finished the /login routes and its corresponding models and dao methods.
 
-By June 6, I would like to have finished the /recipes routes.
+By June 6, I would like to have finished the /recipes routes and its corresponding models and dao methods.
 
-By June 13, I would like to have finished the /menu routes.
+By June 13, I would like to have finished the /menu routes and its corresponding dao methods.
 
 By June 18, I would like to have finished debugging all my inevitable bugs. If I'm done before then, I would like to use aggregation or lookups in the /recipes/search route; so the app can have filters for the recipes.
