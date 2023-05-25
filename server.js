@@ -1,12 +1,10 @@
-const server = require("./server");
-const mongoose = require('mongoose');
+const express = require("express");
 
-const port = process.env.PORT || 3000;
+const routes = require("./routes");
 
-mongoose.connect('mongodb://127.0.0.1/jscript-330-week-5', {}).then(() => {
-  server.listen(port, () => {
-   console.log(`Server is listening on http://localhost:${port}`);
-  });
-}).catch((e) => {
-  console.error(`Failed to start server:`, e);
-});
+const server = express();
+server.use(express.json());
+
+server.use(routes);
+
+module.exports = server;
