@@ -1,0 +1,23 @@
+{
+  "name": "recipe-box",
+  "version": "1.0.0",
+  "description": "Virtual recipe box that can save your meal plan and can create a grocery list from it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/N-M-Luna/recipe-box.git"
+  },
+  "author": "N. M. Luna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/N-M-Luna/recipe-box/issues"
+  },
+  "homepage": "https://github.com/N-M-Luna/recipe-box#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
