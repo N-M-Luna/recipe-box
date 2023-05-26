@@ -23,6 +23,10 @@ This app is my solution to meal planning for the week. The user browses recipes 
   - **Menu**: Array of Recipe _id's
   - **Grocery list**: Array of Ingredient _id's
 
+- Token model
+  - **token**: String (unique) (index)
+  - **userId**: String
+
 - Recipe model
   - **Title**: String (unique) (index)
   - **Author**: User email
