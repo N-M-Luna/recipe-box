@@ -43,46 +43,45 @@ This app is my solution to meal planning for the week. The user browses recipes 
 
 #### /login routes
 
-- **/login/signup** - creates a new user.
+- POST **/login/signup** - creates a new user.
 
-- **/login/** - reads an existing user.
+- GET **/login/** - reads an existing user.
 
-- **/login/password** - updates a user's password. (Restricted to authenticated users.)
+- PUT **/login/password** - updates a user's password. (Restricted to authenticated users.)
 
-- **/login/delete** - deletes a user. (Restricted to authorized users.)
+- DELETE **/login/:userId** - deletes a user. (Restricted to authorized users.)
 
 #### /recipes routes
 
-- **/recipes/add** - creates a new recipe. (Restricted to authenticated users.)
+- POST **/recipes/** - creates a new recipe. (Restricted to authenticated users.)
 
-- **/recipes/** - reads all the recipes. Returns recipe objects after swapping the ingredients field (an array of `[int, _id]` arrays) with an array of strings that describe the ingredients and their quantities.
+- GET **/recipes/** - reads all the recipes. Returns recipe objects after swapping the ingredients field (an array of `[int, _id]` arrays) with an array of strings that describe the ingredients and their quantities.
 
-- **/recipes/:userId** - reads all recipes by user with id: userId.
+- GET **/recipes/:userId** - reads all recipes by user with id: userId.
 
-- **/recipes/search** - reads all recipes that match a query (by text search or by ingredient)
+- GET **/recipes/search** - reads all recipes that match a query (by text search or by ingredient)
 
+- PUT **/recipes/:recipeId** - updates an existing recipe. (Authenticated users can update only their own recipes.)
 
-- **/recipes/edit** - updates an existing recipe. (Authenticated users can update only their own recipes.)
-
-- **recipes/delete** - deletes a recipe. (Authenticated users can delete their own recipes. Authorized users can delete any recipe.)
+- DELETE **recipes/:recipeId** - deletes a recipe. (Authenticated users can delete their own recipes. Authorized users can delete any recipe.)
 
 #### /menu routes
 
 > All /menu routes require authentication.
 
-- **/menu/** - reads the user's menu.
+- GET **/menu/** - reads the user's menu.
 
-- **/grocery-list** - reads the user's grocery list
+- GET **/grocery-list** - reads the user's grocery list
 
-- **/menu/add** - update user's menu to include a recipe and the user's grocery list to include the corresponding ingredients.
+- PUT **/menu/** - update user's menu to include a recipe and the user's grocery list to include the corresponding ingredients.
 
-- **/menu/clear** - delete all recipes from user's menu and all ingredients from user's grocery list.
+- DELETE **/menu/clear** - delete all recipes from user's menu and all ingredients from user's grocery list.
 
 ## Project requirements
 
 - There are 7 routes that use **authentication** and 2 routes that use **authorization**.
 
-- The /login and the /recipes routes are both complete sets of **CRUD routes**. The /menu routes only have Read and Update route.
+- The /login and the /recipes routes are both complete sets of **CRUD routes**. The /menu routes only have Read, Update, and Delete routes.
 
 - The following fields should be **unique**: name (in ingredients), title (in recipes), and  email (in user).
 
