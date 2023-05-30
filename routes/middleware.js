@@ -1,6 +1,7 @@
 const tokenDAO = require('../daos/token');
 
 async function isAuthenticated (req, res, next) {
+    console.log(`Authenticating...`)
 
     try {
     //Grab the token from the header and the userId from the token.
@@ -27,6 +28,8 @@ async function isAuthenticated (req, res, next) {
             if (!tokenUserId) {
                 res.status(401).send("User not logged in.");
             } else {
+                console.log(`User has been authenticated.`);
+                req.userId = tokenUserId;
                 next();
             }
         }
@@ -36,4 +39,26 @@ async function isAuthenticated (req, res, next) {
     }
 }
 
-module.exports = { isAuthenticated }
+async function isAuthorized (req, res, next) {
+    console.log(`Authorizing...`)
+    try{
+        //Grab the (authenticated) user
+        const user = await userDAO.getUser(req.userId);
+        const isAdminUser = user.roles.includes('admin');
+
+        //If the user is an admin, they can go on.
+        if (isAdminUser) {
+            console.log(`User is authorized.`)
+            next();
+
+        } else { //If not, send a 403.
+            res.sendStatus(403)
+        }
+
+    } catch (e) {
+        next(e);
+    }
+    next();
+}
+
+module.exports = { isAuthenticated, isAuthorized }

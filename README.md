@@ -6,11 +6,13 @@ University of Washington
 
 ## Scenario
 
-?
+The user browses recipes and picks the ones they want to make that week. Then, the app puts together the grocery list and menu.
+
+Users can also create, save, and share their own recipes.
 
 ## Problem it seeks to solve
 
-This app is my solution to meal planning for the week. The user browses recipes and picks the ones they want to make that week. Then, the app puts together the grocery list and menu.
+This app is my solution to meal planning for the week.
 
 ## Technical components
 
@@ -45,6 +47,8 @@ This app is my solution to meal planning for the week. The user browses recipes 
 
 - POST **/login/signup** - creates a new user.
 
+- POST **/login/logout** - logs out a user (removes token).
+
 - GET **/login/** - reads an existing user.
 
 - PUT **/login/password** - updates a user's password. (Restricted to authenticated users.)
@@ -75,7 +79,7 @@ This app is my solution to meal planning for the week. The user browses recipes 
 
 - PUT **/menu/** - update user's menu to include a recipe and the user's grocery list to include the corresponding ingredients.
 
-- DELETE **/menu/clear** - delete all recipes from user's menu and all ingredients from user's grocery list.
+- DELETE **/menu/** - delete all recipes from user's menu and all ingredients from user's grocery list.
 
 ## Project requirements
 

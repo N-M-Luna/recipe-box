@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const bcrypt = require('bcrypt');
-const {isAuthenticated} = require('./middleware');
+const {isAuthenticated, isAuthorized} = require('./middleware');
 const userDAO = require('../daos/user');
 const tokenDAO = require('../daos/token');
 
@@ -111,7 +111,7 @@ If the user is logged in, invalidate their token so they can't use it again (rem
 */
 router.post('/logout', async (req, res, next) => {
     const oldToken = req.headers.authorization;
-    const removedToken = tokenDAO.removeToken(oldToken);
+    const removedToken = await tokenDAO.removeToken(oldToken);
     if (removedToken) {
         res.status(200).send(removedToken);
     } else {
@@ -119,5 +119,19 @@ router.post('/logout', async (req, res, next) => {
     }
 });
 
+/** DELETE /:userId
+If the user is authorized, deletes a user with email :userId
+*/
+router.delete('/:userId', isAuthenticated, isAuthorized, async (req, res, next) => {
+
+    //Grab the user to be deleted
+    const user = await userDAO.getUser(req.params.userId)
+    const deletedUser = userDAO.removeUser(user._id)
+    if (deletedUser) {
+        res.status(200).send(deletedUser);
+    } else {
+        res.status(400).send(`Could not delete user.`);
+    }
+})
 
 module.exports = router;
