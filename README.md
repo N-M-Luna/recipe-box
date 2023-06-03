@@ -23,7 +23,7 @@ This app is my solution to meal planning for the week.
   - **Password**: Encrypted string
   - **Roles**: Array of strings
   - **Menu**: Array of Recipe _id's
-  - **Grocery list**: Array of Ingredient _id's
+  - **Grocery list**: Array of [number, Ingredient _id] arrays
 
 - Token model
   - **token**: String (unique) (index)

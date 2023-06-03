@@ -1,7 +1,7 @@
 const tokenDAO = require('../daos/token');
+const userDAO = require('../daos/user');
 
 async function isAuthenticated (req, res, next) {
-    console.log(`Authenticating...`)
 
     try {
     //Grab the token from the header and the userId from the token.
@@ -19,8 +19,8 @@ async function isAuthenticated (req, res, next) {
         //Check if token is bad.
         if (headerToken=="BAD") {
             res.status(401).send("Bad token.");
-        } else {
 
+        } else {
             //If token is good, grab the email associated with that
             tokenUserId = await tokenDAO.getUserIdFromToken(headerToken);
 
@@ -28,7 +28,6 @@ async function isAuthenticated (req, res, next) {
             if (!tokenUserId) {
                 res.status(401).send("User not logged in.");
             } else {
-                console.log(`User has been authenticated.`);
                 req.userId = tokenUserId;
                 next();
             }
@@ -40,7 +39,6 @@ async function isAuthenticated (req, res, next) {
 }
 
 async function isAuthorized (req, res, next) {
-    console.log(`Authorizing...`)
     try{
         //Grab the (authenticated) user
         const user = await userDAO.getUser(req.userId);
@@ -48,7 +46,6 @@ async function isAuthorized (req, res, next) {
 
         //If the user is an admin, they can go on.
         if (isAdminUser) {
-            console.log(`User is authorized.`)
             next();
 
         } else { //If not, send a 403.

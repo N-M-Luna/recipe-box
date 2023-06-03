@@ -12,29 +12,35 @@ Stores user with their email and encrypted password; handles conflicts when the 
 router.post('/signup', async (req, res, next) => {
     //Grab incoming email and password.
     const {email, password} = req.body;
-    const actuallyOldUser = await userDAO.getUser(email);
 
-    //Check that the password is not missing or empty. If so, return error 400.
-    if (!password || password==undefined || password=='') {
-        res.status(400).send('Password is required.');
-
-    //Check that the email is not in use. If so, return error 409 'Conflict with a repeat signup'.
-    } else if (actuallyOldUser) {
-        res.status(409).send('Conflict with a repeat signup');
-
-    //If both checks pass, encrypt the password.
+    //Check that the email is not missing or empty. If so, return error 400
+    if (!email || email===undefined || email=='') {
+        res.status(400).send('Email is required.');
     } else {
-        const saltRounds = 10;
+        const actuallyOldUser = await userDAO.getUser(email);
 
-        //Hash the input text password
-        bcrypt.hash(password, saltRounds).then(async function(hash) {
-            const savedNewUser = await userDAO.createUser({ email: email, password: hash });
-            if (savedNewUser) {
-                res.sendStatus(200);
-            } else {
-                res.sendStatus(400);
-            }
-        });
+        //Check that the password is not missing or empty. If so, return error 400.
+        if (!password || password==undefined || password=='') {
+            res.status(400).send('Password is required.');
+
+        //Check that the email is not in use. If so, return error 409 'Conflict with a repeat signup'.
+        } else if (actuallyOldUser) {
+            res.status(409).send('Conflict with a repeat signup');
+
+        //If both checks pass, encrypt the password.
+        } else {
+            const saltRounds = 10;
+
+            //Hash the input text password
+            bcrypt.hash(password, saltRounds).then(async function(hash) {
+                const savedNewUser = await userDAO.createUser({ email, password: hash, roles: ["regularUser"] });
+                if (savedNewUser) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(400);
+                }
+            });
+        }
     }
 });
 
@@ -56,18 +62,18 @@ router.post('/', async (req, res, next) => {
         res.status(401).send('Email is not associated with any user.');
 
     //Check that the user input a password
-    } else if (!inputPassword || inputPassword === '') {
+    } else if (!inputPassword || inputPassword === undefined || inputPassword === '') {
         res.status(400).send(`Password is missing.`);
 
     //Check that user.password matches hashed inputPassword
     } else {
         const match = await bcrypt.compare(inputPassword, user.password);
 
-        //If so, generate a random token with uuid and return it to the user.
+        //If not, send a 401 code.
         if (!match) {
             res.status(401).send('Password is incorrect.');
 
-        //If not, send a 401 code.
+        //If they match, generate a random token with uuid and return it to the user.
         } else {
             const token = await tokenDAO.makeTokenForUserId(user.email);
             req.headers.authorization = token;
@@ -109,7 +115,7 @@ router.post('/password', isAuthenticated, async (req, res, next) => {
 /* POST /logout
 If the user is logged in, invalidate their token so they can't use it again (remove it).
 */
-router.post('/logout', async (req, res, next) => {
+router.post('/logout', isAuthenticated, async (req, res, next) => {
     const oldToken = req.headers.authorization;
     const removedToken = await tokenDAO.removeToken(oldToken);
     if (removedToken) {
@@ -123,15 +129,19 @@ router.post('/logout', async (req, res, next) => {
 If the user is authorized, deletes a user with email :userId
 */
 router.delete('/:userId', isAuthenticated, isAuthorized, async (req, res, next) => {
+    try {
+        //Grab the user to be deleted
+        const user = await userDAO.getUser(req.params.userId)
 
-    //Grab the user to be deleted
-    const user = await userDAO.getUser(req.params.userId)
-    const deletedUser = userDAO.removeUser(user._id)
-    if (deletedUser) {
-        res.status(200).send(deletedUser);
-    } else {
-        res.status(400).send(`Could not delete user.`);
+        const deletedUser = await userDAO.removeUser(user._id)
+        if (deletedUser) {
+            res.status(200).send(deletedUser);
+        } else {
+            res.status(400).send(`Could not delete user.`);
+        }
+    } catch(e) {
+        next(e);
     }
-})
+});
 
 module.exports = router;

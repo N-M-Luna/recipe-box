@@ -5,9 +5,6 @@ module.exports = {};
 
 module.exports.connectDB = async () => {
   await mongoose.connect(process.env.MONGO_URL, {});
-  //My console says this is undefined.
-  //https://stackoverflow.com/questions/55604057/what-is-mongo-url-and-what-should-it-be-set-to
-  //https://stackoverflow.com/questions/51770772/mongoose-connect-first-argument-should-be-string-received-undefined
   await Promise.all(models.map(m => m.syncIndexes()));
 }
 
