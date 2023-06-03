@@ -58,25 +58,25 @@ describe('/login', () => {
 
   });
 
-  describe('POST /', () => {
+  describe('GET /', () => {
 
     beforeEach(async () => {
       await request(server).post('/login/signup').send(freeUser);
     })
 
     it('should return 200 and a token when password matches', async () => {
-      const response = await request(server).post('/login').send(freeUser);
+      const response = await request(server).get('/login').send(freeUser);
       expect(response.statusCode).toEqual(200);
       expect(typeof response.body.token).toEqual('string');
     });
 
     it('should return 400 when password is not provided', async () => {
-      const response = await request(server).post('/login').send({email: freeUser.email});
+      const response = await request(server).get('/login').send({email: freeUser.email});
       expect(response.statusCode).toEqual(400);
     });
 
     it('should return 401 when password does not match', async () => {
-      const response = await request(server).post('/login').send({
+      const response = await request(server).get('/login').send({
         email: freeUser.email,
         password: adminUser.password
       });
@@ -90,23 +90,23 @@ describe('/login', () => {
 
     beforeEach(async () => {
       await request(server).post('/login/signup').send(freeUser);
-      response0 = await request(server).post('/login').send(freeUser);
+      response0 = await request(server).get('/login').send(freeUser);
       token0 = response0.body.token;
     })
 
 //FAILS
     it('should return 200 and change password for authenticated user', async () => {
       const passwordResponse = await request(server)
-        .post('/login/password')
+        .put('/login/password')
         .set('Authorization', 'Bearer ' + token0)
         .send({ password: `newString` });
       expect(passwordResponse.statusCode).toEqual(200);
       //BUG: Sends back 401 due to a BAD token. I checked that: Token0 is defined; User is created in DB;
 
-      const oldLoginResponse = await request(server).post('/login').send({freeUser});
+      const oldLoginResponse = await request(server).get('/login').send({freeUser});
       expect(oldLoginResponse.statusCode).toEqual(401);
 
-      const newLoginResponse = await request(server).post('/login').send({
+      const newLoginResponse = await request(server).get('/login').send({
         email: freeUser.email,
         password: `newString`
       });
@@ -116,7 +116,7 @@ describe('/login', () => {
 
     it('should return 400 with empty password', async () => {
       const response = await request(server)
-        .post("/login/password")
+        .put("/login/password")
         .set('Authorization', 'Bearer ' + token0)
         .send({ password: '' });
       expect(response.statusCode).toEqual(400);
@@ -124,7 +124,7 @@ describe('/login', () => {
 
     it('should return 401 with a bogus token', async () => {
       const response = await request(server)
-        .post("/login/password")
+        .put("/login/password")
         .set('Authorization', 'Bearer BAD')
         .send({ password: 'newPassword' });
       expect(response.statusCode).toEqual(401);
@@ -137,7 +137,7 @@ describe('/login', () => {
     let response0, token0
     beforeEach(async () => {
       await request(server).post('/login/signup').send(adminUser);
-      response0 = await request(server).post('/login').send(adminUser);
+      response0 = await request(server).get('/login').send(adminUser);
       token0 = response0.body.token;
     })
 
@@ -166,11 +166,11 @@ describe('/login', () => {
     beforeEach(async () => {
 
       await request(server).post('/login/signup').send(freeUser);
-      userLoginResponse = await request(server).post('/login').send(freeUser);
+      userLoginResponse = await request(server).get('/login').send(freeUser);
       userToken = userLoginResponse.body.token;
 
       await request(server).post('/login/signup').send(adminUser);
-      adminLoginResponse = await request(server).post('/login').send(adminUser);
+      adminLoginResponse = await request(server).get('/login').send(adminUser);
       adminToken = adminLoginResponse.body.token;
       await User.updateOne({ email: adminUser.email }, { $push: { roles: 'admin'} });
 

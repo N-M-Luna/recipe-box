@@ -44,12 +44,12 @@ router.post('/signup', async (req, res, next) => {
     }
 });
 
-/* POST /
+/* GET /
 Finds the user with the provided email.
 Uses bcrypt to compare stored password with the incoming password.
 If there's a match, generates a random token with uuid and returns it to the user.
 */
-router.post('/', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     //Find the user with the email that the user input
     const inputEmail = req.body.email;
     const user = await userDAO.getUser(inputEmail);
@@ -82,10 +82,10 @@ router.post('/', async (req, res, next) => {
     }
 });
 
-/* POST /password
+/* PUT /password
 If the user is logged in, stores the incoming password using their userId.
 */
-router.post('/password', isAuthenticated, async (req, res, next) => {
+router.put('/password', isAuthenticated, async (req, res, next) => {
     //Check that the password exists
     const newPassword = req.body.password;
 
