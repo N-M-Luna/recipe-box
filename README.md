@@ -4,6 +4,16 @@ Final project for JSCRIPT 330 B <br>
 Spring 2023 <br>
 University of Washington
 
+## June 4 Update
+
+DONE. Set up Express server.
+DONE. Write /login tests, routes, and corresponding daos and models.
+WIP.  Write /recipe tests.
+
+TODO. Write /recipe routes and corresponding daos and models.
+TODO. Write /menu tests, routes, and corresponding daos and models.
+TODO. Fix 2 failing /login tests.
+
 ## Scenario
 
 The user browses recipes and picks the ones they want to make that week. Then, the app puts together the grocery list and menu.
