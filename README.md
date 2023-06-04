@@ -23,7 +23,7 @@ This app is my solution to meal planning for the week.
   - **Password**: Encrypted string
   - **Roles**: Array of strings
   - **Menu**: Array of Recipe _id's
-  - **Grocery list**: Array of [number, Ingredient _id] arrays
+  - **Grocery list**: Array of [number, units, Ingredient _id] arrays
 
 - Token model
   - **token**: String (unique) (index)
@@ -32,7 +32,7 @@ This app is my solution to meal planning for the week.
 - Recipe model
   - **Title**: String (unique) (index)
   - **Author**: User email
-  - **Ingredients**: Arrays of [number, Ingredient _id] arrays.
+  - **Ingredients**: Arrays of [number, units, Ingredient _id] arrays.
   - **Instructions**: String
   - **Prep time**: Array of three integers representing days, hours, and minutes
   - **Cuisine**: String
@@ -59,7 +59,7 @@ This app is my solution to meal planning for the week.
 
 - POST **/recipes/** - creates a new recipe. (Restricted to authenticated users.)
 
-- GET **/recipes/** - reads all the recipes. Returns recipe objects after swapping the ingredients field (an array of `[int, _id]` arrays) with an array of strings that describe the ingredients and their quantities.
+- GET **/recipes/** - reads all the recipes. Returns recipe objects after swapping the ingredients field (an array of `[int, string, _id]` arrays) with an array of strings that describe the ingredients and their quantities.
 
 - GET **/recipes/:userId** - reads all recipes by user with id: userId.
 

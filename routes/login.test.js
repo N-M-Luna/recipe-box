@@ -21,6 +21,7 @@ describe('/login', () => {
     password: 'p3t3rSux',
     roles: ['user','admin']
   };
+  module.exports = { freeUser, adminUser };
 
   describe('POST / signup', () => {
 

@@ -33,7 +33,7 @@ router.post('/signup', async (req, res, next) => {
 
             //Hash the input text password
             bcrypt.hash(password, saltRounds).then(async function(hash) {
-                const savedNewUser = await userDAO.createUser({ email, password: hash, roles: ["regularUser"] });
+                const savedNewUser = await userDAO.createUser({ email, password: hash, roles: ["regularUser"], menu: [], groceryList: [] });
                 if (savedNewUser) {
                     res.sendStatus(200);
                 } else {
