@@ -6,13 +6,17 @@ University of Washington
 
 ## June 4 Update
 
-DONE. Set up Express server.
-DONE. Write /login tests, routes, and corresponding daos and models.
-WIP.  Write /recipe tests.
+**DONE.** Set up Express server.
 
-TODO. Write /recipe routes and corresponding daos and models.
-TODO. Write /menu tests, routes, and corresponding daos and models.
-TODO. Fix 2 failing /login tests.
+**DONE.** Write /login tests, routes, and corresponding daos and models.
+
+**WIP.**  Write /recipe tests.
+
+**TODO.** Write /recipe routes and corresponding daos and models.
+
+**TODO.** Write /menu tests, routes, and corresponding daos and models.
+
+**TODO.** Fix 2 failing /login tests.
 
 ## Scenario
 
