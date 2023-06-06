@@ -91,11 +91,41 @@ router.get('/', async (req, res, next) => {
 /* GET /:userId
 Reads all recipes by user with id: userId.
 */
-//router.get('/:userId', async (req, res, next) => {
-//Grab userId from req.params
-//Grabs all recipes, filtering by userId, replacing the array of [int, unit, _id] arrays with a string.
-//Returns the recipes
-//})
+router.get('/:userId', async (req, res, next) => {
+    //Grab userId from req.params
+    //Grabs all recipes, filtering by userId, replacing the array of [int, unit, _id] arrays with a string.
+    //Returns the recipes
+    try {
+        //Grabs the recipes from the DB
+        let recipesInDB = await recipeDAO.getByAuthor(req.params.userId);
+
+        //Replaces the array of [int, unit, _id] arrays with a string.
+        for (let rIndex = 0; rIndex < recipesInDB.length; rIndex++) {
+            for (let iIndex = 0; iIndex < recipesInDB[rIndex].ingredients.length; iIndex++) {
+
+                //Find ingredient in the DB
+                const thisIngredient = recipesInDB[rIndex].ingredients[iIndex]
+                const ingredientID = thisIngredient[2];
+                const ingredientObj = await ingredientDAO.findById(ingredientID);
+
+                //Build string that will replace each ingredient array
+                let ingredientString = thisIngredient[0].toString() + ` `
+                if (thisIngredient[1].length > 0) {
+                    ingredientString += `${thisIngredient[1]} `
+                }
+                ingredientString += ingredientObj.name;
+
+                //Replace the ingredient array with the string
+                recipesInDB[rIndex].ingredients[iIndex] = ingredientString;
+            }
+        }
+
+        //Returns all recipes
+        res.status(200).send(recipesInDB);
+    } catch (e) {
+        next(e);
+    }
+})
 
 /* GET /search
 Reads all recipes that match a query (by text search or by ingredient)

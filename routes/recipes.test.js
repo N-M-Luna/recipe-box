@@ -69,20 +69,18 @@ describe('/recipes', () => {
     prepTime: [0, 0, 30],
     cuisine: 'Caribbean'
   }
-//TO DELETE...
-  const dehydratedPizzaRecipe = {
+  const dehydratedPizzaString = {
     ...dehydratedPizza,
-    author: freeUser.email
+    ingredients: ['1 dehydrated pizza']
   }
-  const tamagoyakiRecipe = {
+  const tamagoyakiString = {
     ...tamagoyaki,
-    author: adminUser.email
+    ingredients: ['4 egg', '2 oz mirin', '2 sheets nori', '1 cup rice'],
   }
-  const arrozConHabichuelasRecipe = {
+  const arrozConHabichuelasString = {
     ...arrozConHabichuelas,
-    author: freeUser.email
+    ingredients: ['1 cup rice', '1 can beans', '2 tbsp sofrito'],
   }
-//...UP TO HERE
 
   //Start Testing
   describe('POST /', () => {
@@ -220,19 +218,16 @@ describe('/recipes', () => {
 
       //expect response to contain three recipes (with author and with ingredient strings, not arrays)
       const fullDehydratedPizza = {
-        ...dehydratedPizza,
-        author: freeUser.email,
-        ingredients: ['1 dehydrated pizza']
+        ...dehydratedPizzaString,
+        author: freeUser.email
       }
       const fullTamagoyaki = {
-        ...tamagoyaki,
+        ...tamagoyakiString,
         author: freeUser.email,
-        ingredients: ['4 egg', '2 oz mirin', '2 sheets nori', '1 cup rice'],
       }
       const fullArrozConHabichuelas = {
-        ...arrozConHabichuelas,
+        ...arrozConHabichuelasString,
         author: freeUser.email,
-        ingredients: ['1 cup rice', '1 can beans', '2 tbsp sofrito'],
       }
       expect(response.body).toMatchObject([ fullDehydratedPizza, fullTamagoyaki, fullArrozConHabichuelas])
     });
@@ -256,12 +251,30 @@ describe('/recipes', () => {
     //Before all
     //Write all three recipes to the DB
     beforeEach(async () => {
-      await Recipe.create([
-        dehydratedPizzaRecipe,
-        tamagoyakiRecipe,
-        arrozConHabichuelasRecipe
-      ])
+
+      await request(server).post('/login/signup').send(freeUser);
+      const userLoginResponse = await request(server).post('/login').send(freeUser);
+      const userToken = userLoginResponse.body.token;
+      await request(server).post('/login/signup').send(adminUser);
+      const adminLoginResponse = await request(server).post('/login').send(adminUser);
+      const adminToken = adminLoginResponse.body.token;
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(dehydratedPizza);
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(tamagoyaki);
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + adminToken)
+        .send(arrozConHabichuelas);
     });
+    afterEach(testUtils.clearDB);
 
     it('should return all recipes that have queried ingredient', async () => {
       //get recipes with ingredients: 'dehydrated pizza', 'rice'
@@ -290,11 +303,28 @@ describe('/recipes', () => {
     //Before each:
     //Write all three recipes to the DB
     beforeEach(async () => {
-      await Recipe.create([
-        dehydratedPizzaRecipe,
-        tamagoyakiRecipe,
-        arrozConHabichuelasRecipe
-      ])
+
+      await request(server).post('/login/signup').send(freeUser);
+      const userLoginResponse = await request(server).post('/login').send(freeUser);
+      const userToken = userLoginResponse.body.token;
+      await request(server).post('/login/signup').send(adminUser);
+      const adminLoginResponse = await request(server).post('/login').send(adminUser);
+      const adminToken = adminLoginResponse.body.token;
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(dehydratedPizza);
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(tamagoyaki);
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + adminToken)
+        .send(arrozConHabichuelas);
     });
     afterEach(testUtils.clearDB);
 
@@ -328,10 +358,14 @@ describe('/recipes', () => {
       userLoginResponse = await request(server).post('/login').send(freeUser);
       userToken = userLoginResponse.body.token;
 
-      Recipe.create(dehydratedPizzaRecipe);
-      pizzaRecipeId = (await Recipe.find().lean())[0]._id;
-    });
-    afterEach(testUtils.clearDB);
+      const res = await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(dehydratedPizza);
+
+      pizzaRecipeId = res.body._id;
+      });
+      afterEach(testUtils.clearDB);
 
     it('should return 200 and update the recipe for the author', async () => {
       //put a recipe update
@@ -381,13 +415,6 @@ describe('/recipes', () => {
     //sign up both users
     let pizzaRecipeId, tamagoyakiRecipeId, userLoginResponse, userToken, adminLoginResponse, adminToken
     beforeEach(async () => {
-      await Recipe.create([
-        dehydratedPizzaRecipe,
-        tamagoyakiRecipe
-      ]);
-      const recipesInDB = await Recipe.find().lean()
-      pizzaRecipeId = recipesInDB[0]._id;
-      tamagoyakiRecipeId = recipesInDB[1]._id;
 
       await request(server).post('/login/signup').send(freeUser);
       userLoginResponse = await request(server).post('/login').send(freeUser);
@@ -397,6 +424,20 @@ describe('/recipes', () => {
       adminLoginResponse = await request(server).post('/login').send(adminUser);
       adminToken = adminLoginResponse.body.token;
       await User.updateOne({ email: adminUser.email }, { $push: { roles: 'admin' } });
+
+      const pizzaRes = await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(dehydratedPizza);
+
+      pizzaRecipeId = pizzaRes.body._id;
+
+      const eggRes = await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(dehydratedPizza);
+
+        tamagoyakiRecipeId = eggRes.body._id;
     });
     afterEach(testUtils.clearDB);
 
