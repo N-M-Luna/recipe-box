@@ -11,7 +11,6 @@ module.exports.makeTokenForUserId = async (userId) => {
 
     //Create a token that is associated with that user
     const newToken = await Token.create({token, userId});
-    //console.log(`Making token`, newToken);
     return newToken.token;
 }
 
@@ -22,7 +21,6 @@ module.exports.getUserIdFromToken = async (token) => {
     const tokenInUse = await Token.findOne({token});
 
     //Return the userId associated with that token.
-    //console.log(`Found token object:`, tokenInUse);
     return tokenInUse.userId;
 }
 

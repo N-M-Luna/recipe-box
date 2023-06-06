@@ -119,6 +119,7 @@ By June 13, I would like to have finished the /menu routes and its corresponding
 
 By June 18, I would like to have finished debugging all my inevitable bugs. If I'm done before then, I would like to use aggregation or lookups in the /recipes/search route; so the app can have filters for the recipes.
 
-## Future features
+## Future features/Bugs
 
-- The grocery list displays each ingredient only once. TODO: Add smart unit conversions.
+- Fix: Make use of plural names of ingredients.
+- Add: The grocery list displays each ingredient only once. TODO: Add smart unit conversions.

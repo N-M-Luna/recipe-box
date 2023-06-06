@@ -178,7 +178,6 @@ describe('/login', () => {
 //FAILS
     it('should delete the user and return 200 with an admin token', async () => {
       let usersInDB = await User.find().lean()
-      //console.log(usersInDB) //Both users are in the DB
 
       const response = await request(server)
         .delete('/login/' + freeUser.email)

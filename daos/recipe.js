@@ -7,17 +7,13 @@ module.exports.createRecipe = async (recipeObj) => {
     return await Recipe.create(recipeObj);
 }
 
-//Gets a recipe by the title
-module.exports.findByTitle = async (title) => {
-    return await Recipe.findOne({title});
-}
-/*
-//Updates the user's password field
-module.exports.updateUserPassword = async (email, password) => {
-    return await User.updateOne({email}, {password});
+//Gets all recipes
+module.exports.getAll = async () => {
+    const recipesInDB = await Recipe.find();
+    return recipesInDB;
 }
 
-//Deletes a user
-module.exports.removeUser = async (userId) => {
-    return await User.findOneAndDelete({_id: userId});
-}*/
+//Gets a recipe by the title
+module.exports.findByTitle = async (title) => {
+    return await Recipe.findOne({title}).lean();
+}

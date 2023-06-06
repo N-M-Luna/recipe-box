@@ -45,8 +45,8 @@ describe('/recipes', () => {
       name: 'sofrito',
     },
     {
-      name: 'tomato paste',
-    },
+      name: 'tomato paste'
+    }
   ]
   const dehydratedPizza = {
     title: 'Dehydrated pizza',
@@ -57,18 +57,19 @@ describe('/recipes', () => {
   }
   const tamagoyaki = {
     title: 'Egg sushi',
-    ingredients: [[4, '', 'eggs'], [2, 'oz', 'mirin'], [2, 'sheets', 'nori'], [1, 'cup', 'rice']],
+    ingredients: [[4, '', 'egg'], [2, 'oz', 'mirin'], [2, 'sheets', 'nori'], [1, 'cup', 'rice']],
     instructions: 'Mix the eggs with mirin and cook on pan. Roll eggs into a log and slice. Use nori and culinary voodoo to make cute shapes.',
     prepTime: [0, 0, 45],
     cuisine: 'Japanese'
   }
   const arrozConHabichuelas = {
     title: 'Rice and beans',
-    ingredients: [[1, 'cup', 'rice'], [1, 'can', 'beans'], [2, 'tbsp', 'sofrito'], [2, 'tbs', 'tomato paste']],
-    instructions: 'Mix sofrito, tomato paste and spices in pot. ',
+    ingredients: [[1, 'cup', 'rice'], [1, 'can', 'beans'], [2, 'tbsp', 'sofrito']],
+    instructions: 'Mix sofrito, tomato paste and spices in pot. Stir in rice. Add water and bring to boil. Simmer for 15 minutes.',
     prepTime: [0, 0, 30],
     cuisine: 'Caribbean'
   }
+//TO DELETE...
   const dehydratedPizzaRecipe = {
     ...dehydratedPizza,
     author: freeUser.email
@@ -81,6 +82,7 @@ describe('/recipes', () => {
     ...arrozConHabichuelas,
     author: freeUser.email
   }
+//...UP TO HERE
 
   //Start Testing
   describe('POST /', () => {
@@ -101,8 +103,6 @@ describe('/recipes', () => {
     afterEach(testUtils.clearDB);
 
     it('should return 200 and create a recipe with authenticated user', async () => {
-
-      //const tokensInDB = await Token.find().lean() //Tokens for both users are in the DB
 
       //create ingredients in DB
       await Ingredient.create(testIngredients);
@@ -188,13 +188,28 @@ describe('/recipes', () => {
   describe('GET /', () => {
     //before all:
     //write three recipes to the DB
-    beforeAll(async () => {
-      await Recipe.create([
-        dehydratedPizzaRecipe,
-        tamagoyakiRecipe,
-        arrozConHabichuelasRecipe
-      ]);
+    beforeEach(async () => {
+      await request(server).post('/login/signup').send(freeUser);
+      const userLoginResponse = await request(server).post('/login').send(freeUser);
+      const userToken = userLoginResponse.body.token;
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(dehydratedPizza);
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(tamagoyaki);
+
+      await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + userToken)
+        .send(arrozConHabichuelas);
+
     });
+    afterEach(testUtils.clearDB);
 
     it('should return all the recipes for any user', async () => {
       //get all recipes
@@ -203,12 +218,23 @@ describe('/recipes', () => {
       //expect a 200
       expect(response.statusCode).toEqual(200);
 
-      //expect response to contain three recipes
-      expect(response.body).toMatchObject([
-        dehydratedPizzaRecipe,
-        tamagoyakiRecipe,
-        arrozConHabichuelasRecipe
-      ])
+      //expect response to contain three recipes (with author and with ingredient strings, not arrays)
+      const fullDehydratedPizza = {
+        ...dehydratedPizza,
+        author: freeUser.email,
+        ingredients: ['1 dehydrated pizza']
+      }
+      const fullTamagoyaki = {
+        ...tamagoyaki,
+        author: freeUser.email,
+        ingredients: ['4 egg', '2 oz mirin', '2 sheets nori', '1 cup rice'],
+      }
+      const fullArrozConHabichuelas = {
+        ...arrozConHabichuelas,
+        author: freeUser.email,
+        ingredients: ['1 cup rice', '1 can beans', '2 tbsp sofrito'],
+      }
+      expect(response.body).toMatchObject([ fullDehydratedPizza, fullTamagoyaki, fullArrozConHabichuelas])
     });
 
     it('should return recipes with strings as ingredients', async () => {
@@ -221,7 +247,7 @@ describe('/recipes', () => {
       //expect the ingredients fiels to be an array of strings
       const recipesInResponse = response.body;
       const randomIngredient = recipesInResponse[0].ingredients[0];
-      expect(typeof randomIngredient).toEqual('String');
+      expect(typeof randomIngredient).toEqual('string');
     });
 
   });

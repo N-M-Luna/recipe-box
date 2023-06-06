@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const router = Router();
-const {isAuthenticated, isAuthorized} = require('./middleware');
+const { isAuthenticated, isAuthorized } = require('./middleware');
 const userDAO = require('../daos/user');
 const tokenDAO = require('../daos/token');
 const recipeDAO = require('../daos/recipe');
@@ -23,24 +23,23 @@ router.post('/', isAuthenticated, async (req, res, next) => {
             res.status(409).send(`Recipe already in DB`);
         } else {
 
-            //Swap the ingredient name (string) for its _id.
-            //(Create a new Ingredient doc for each element that does not exist)
-            ingredients.forEach(async (i) => {
-                const ingredientInDB = await ingredientDAO.findByName(i[2]);
+            //For each ingredient in the recipe, get its _id in the DB
+            const ingredientsForDB = []
+            for (let i = 0; i < ingredients.length; i++) {
+                const ingredientInDB = await ingredientDAO.findByName(ingredients[i][2]);
                 if (ingredientInDB) {
-                    i[2] = ingredientInDB._id;
-                } else {
-                    const newIngredient = await ingredientDAO.createIngredient({ name: i[2] });
-                    i[2] = newIngredient._id;
-                }
-            })
+                    ingredientsForDB.push([ingredients[i][0], ingredients[i][1], ingredientInDB._id]);
 
-            //Grab the recipe's author
-            const author = req.userId;
+                } else { //If it does not exists in the DB, create a new Ingredient doc for it and get its _id.
+                    const newIngredient = await ingredientDAO.createIngredient({ name: ingredients[i][2] });
+                    ingredientsForDB.push([ingredients[i][0], ingredients[i][1], newIngredient._id]);
+                }
+            }
 
             //Send the complete recipe object to be written in the DB
+            const completeRecipe = {title, author: req.userId, instructions, prepTime, ingredients: ingredientsForDB, cuisine};
             try {
-                const newRecipe = await recipeDAO.createRecipe({ title, author, prepTime, ingredients, cuisine });
+                const newRecipe = await recipeDAO.createRecipe(completeRecipe);
                 res.status(200).send(newRecipe);
             } catch (e) {
                 next(e);
@@ -55,51 +54,75 @@ router.post('/', isAuthenticated, async (req, res, next) => {
 /* GET /
 Reads all the recipes.
 Returns recipe objects after swapping the ingredients field with an array of strings that describe the ingredients and their quantities.
-
-router.get('/', async (req, res, next) => {
-    //Grabs the recipes, replacing the array of [int, unit, _id] arrays with a string.
-    //Returns all recipes
-})
 */
+router.get('/', async (req, res, next) => {
+    try {
+        //Grabs the recipes from the DB
+        let recipesInDB = await recipeDAO.getAll();
+
+        //Replaces the array of [int, unit, _id] arrays with a string.
+        for (let rIndex = 0; rIndex < recipesInDB.length; rIndex++) {
+            for (let iIndex = 0; iIndex < recipesInDB[rIndex].ingredients.length; iIndex++) {
+
+                //Find ingredient in the DB
+                const thisIngredient = recipesInDB[rIndex].ingredients[iIndex]
+                const ingredientID = thisIngredient[2];
+                const ingredientObj = await ingredientDAO.findById(ingredientID);
+
+                //Build string that will replace each ingredient array
+                let ingredientString = thisIngredient[0].toString() + ` `
+                if (thisIngredient[1].length > 0) {
+                    ingredientString += `${thisIngredient[1]} `
+                }
+                ingredientString += ingredientObj.name;
+
+                //Replace the ingredient array with the string
+                recipesInDB[rIndex].ingredients[iIndex] = ingredientString;
+            }
+        }
+
+        //Returns all recipes
+        res.status(200).send(recipesInDB);
+    } catch (e) {
+        next(e);
+    }
+})
 
 /* GET /:userId
 Reads all recipes by user with id: userId.
-
-router.get('/:userId', async (req, res, next) => {
-    //Grab userId from req.params
-    //Grabs all recipes, filtering by userId, replacing the array of [int, unit, _id] arrays with a string.
-    //Returns the recipes
-})
 */
+//router.get('/:userId', async (req, res, next) => {
+//Grab userId from req.params
+//Grabs all recipes, filtering by userId, replacing the array of [int, unit, _id] arrays with a string.
+//Returns the recipes
+//})
 
 /* GET /search
 Reads all recipes that match a query (by text search or by ingredient)
-
-router.get('/search', async (req, res, next) => {
-    //Use aggregation for text search and lookup for ingredient?
-})
 */
+//router.get('/search', async (req, res, next) => {
+//Use aggregation for text search and lookup for ingredient?
+//})
 
 /* PUT /:recipeId
 Updates an existing recipe.
 Authenticated users can update only their own recipes.
-
-router.put('/:recipeId', isAuthenticated, async (req, res, next) => {
-    //If author is same as req.userId, update recipe
-    //If not, return 403
-})
 */
+//router.put('/:recipeId', isAuthenticated, async (req, res, next) => {
+//If author is same as req.userId, update recipe
+//If not, return 403
+//})
 
 /* DELETE /:recipeId
 Deletes a recipe.
 Authenticated users can delete their own recipes.
 Authorized users can delete any recipe.
-
-router.delete('/:recipeId', isAuthenticated, async (req, res, next) => {
-    //Grab user from req.userId and recipe from req.params
-    //If user is admin OR if user is same as recipe author, delete the recipe.
-    //If not, return 403
-})
 */
+//router.delete('/:recipeId', isAuthenticated, async (req, res, next) => {
+//Grab user from req.userId and recipe from req.params
+//If user is admin OR if user is same as recipe author, delete the recipe.
+//If not, return 403
+//})
+
 
 module.exports = router;
