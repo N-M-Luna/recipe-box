@@ -4,6 +4,7 @@ const testUtils = require('../test-utils');
 const User = require('../models/user');
 const Ingredient = require('../models/ingredient');
 const Recipe = require('../models/recipe');
+const Token = require('../models/token');
 
 describe('/recipes', () => {
   beforeAll(testUtils.connectDB);
@@ -56,7 +57,7 @@ describe('/recipes', () => {
   }
   const tamagoyaki = {
     title: 'Egg sushi',
-    ingredients: [[4, '', 'eggs'], [2, 'oz', 'mirin'], [2, 'sheets', 'nori'][1, 'cup', 'rice']],
+    ingredients: [[4, '', 'eggs'], [2, 'oz', 'mirin'], [2, 'sheets', 'nori'], [1, 'cup', 'rice']],
     instructions: 'Mix the eggs with mirin and cook on pan. Roll eggs into a log and slice. Use nori and culinary voodoo to make cute shapes.',
     prepTime: [0, 0, 45],
     cuisine: 'Japanese'
@@ -89,16 +90,20 @@ describe('/recipes', () => {
     beforeEach(async () => {
 
       await request(server).post('/login/signup').send(freeUser);
-      userLoginResponse = await request(server).get('/login').send(freeUser);
+      userLoginResponse = await request(server).post('/login').send(freeUser);
       userToken = userLoginResponse.body.token;
 
       await request(server).post('/login/signup').send(adminUser);
-      adminLoginResponse = await request(server).get('/login').send(adminUser);
+      adminLoginResponse = await request(server).post('/login').send(adminUser);
       adminToken = adminLoginResponse.body.token;
       await User.updateOne({ email: adminUser.email }, { $push: { roles: 'admin' } });
     });
+    afterEach(testUtils.clearDB);
 
     it('should return 200 and create a recipe with authenticated user', async () => {
+
+      //const tokensInDB = await Token.find().lean() //Tokens for both users are in the DB
+
       //create ingredients in DB
       await Ingredient.create(testIngredients);
 
@@ -158,7 +163,7 @@ describe('/recipes', () => {
         .send(dehydratedPizza);
 
       //expect a 401
-      expect(response.statusCode).toEqual(400);
+      expect(response.statusCode).toEqual(401);
     });
 
     it('should return 409 with a repeated recipe', async () => {
@@ -294,7 +299,7 @@ describe('/recipes', () => {
     let userLoginResponse, userToken, pizzaRecipeId
     beforeEach(async () => {
       await request(server).post('/login/signup').send(freeUser);
-      userLoginResponse = await request(server).get('/login').send(freeUser);
+      userLoginResponse = await request(server).post('/login').send(freeUser);
       userToken = userLoginResponse.body.token;
 
       Recipe.create(dehydratedPizzaRecipe);
@@ -328,7 +333,7 @@ describe('/recipes', () => {
     it('should return 401 to anyone other than the author', async () => {
       //sign up and log in adminUser
       await request(server).post('/login/signup').send(adminUser);
-      const adminLoginResponse = await request(server).get('/login').send(adminUser);
+      const adminLoginResponse = await request(server).post('/login').send(adminUser);
       const adminToken = adminLoginResponse.body.token;
       await User.updateOne({ email: adminUser.email }, { $push: { roles: 'admin' } });
 
@@ -359,11 +364,11 @@ describe('/recipes', () => {
       tamagoyakiRecipeId = recipesInDB[1]._id;
 
       await request(server).post('/login/signup').send(freeUser);
-      userLoginResponse = await request(server).get('/login').send(freeUser);
+      userLoginResponse = await request(server).post('/login').send(freeUser);
       userToken = userLoginResponse.body.token;
 
       await request(server).post('/login/signup').send(adminUser);
-      adminLoginResponse = await request(server).get('/login').send(adminUser);
+      adminLoginResponse = await request(server).post('/login').send(adminUser);
       adminToken = adminLoginResponse.body.token;
       await User.updateOne({ email: adminUser.email }, { $push: { roles: 'admin' } });
     });

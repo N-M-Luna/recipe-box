@@ -2,20 +2,55 @@ const { Router } = require('express');
 const router = Router();
 const {isAuthenticated, isAuthorized} = require('./middleware');
 const userDAO = require('../daos/user');
+const tokenDAO = require('../daos/token');
 const recipeDAO = require('../daos/recipe');
-
+const ingredientDAO = require('../daos/ingredient');
 
 /* POST /
 If user is autheticated, creates a new recipe.
-
-router.post('/', isAuthenticated, async (req, res, next) => {
-    //From req.body:
-    //Grabs strings title, prepTime, and cuisine.
-    //Grabs the amount (number), unit (string), and ingredient (string).
-    //Search for the ingredient doc. If it does not exists, create a new doc for it. Swap the ingredient string with the _id.
-    //From req.userId, grabs auhtorId.
-})
 */
+router.post('/', isAuthenticated, async (req, res, next) => {
+
+    //Check that the request body has (non-empty) title, prepTime, instructions, ingredients, and cuisine.
+    let { title, prepTime, instructions, ingredients, cuisine } = req.body;
+    if (title === null || title === '' || prepTime === null || prepTime === '' || instructions === null || instructions === '' || ingredients === null || ingredients === '' || cuisine === null || cuisine === '') {
+        res.status(400).send('Missing some recipe info.')
+
+    } else {
+        //Check that the recipe is not already in the DB
+        const alreadyInDB = await recipeDAO.findByTitle(title);
+        if (alreadyInDB) {
+            res.status(409).send(`Recipe already in DB`);
+        } else {
+
+            //Swap the ingredient name (string) for its _id.
+            //(Create a new Ingredient doc for each element that does not exist)
+            ingredients.forEach(async (i) => {
+                const ingredientInDB = await ingredientDAO.findByName(i[2]);
+                if (ingredientInDB) {
+                    i[2] = ingredientInDB._id;
+                } else {
+                    const newIngredient = await ingredientDAO.createIngredient({ name: i[2] });
+                    i[2] = newIngredient._id;
+                }
+            })
+
+            //Grab the recipe's author
+            const author = req.userId;
+
+            //Send the complete recipe object to be written in the DB
+            try {
+                const newRecipe = await recipeDAO.createRecipe({ title, author, prepTime, ingredients, cuisine });
+                res.status(200).send(newRecipe);
+            } catch (e) {
+                next(e);
+            }
+        }
+    }
+
+
+})
+
 
 /* GET /
 Reads all the recipes.
