@@ -107,6 +107,7 @@ This app is my solution to meal planning for the week.
 
 - The Title, Instructions, and Cuisine fields (in the Recipe model) will be included in the **text search** for the /recipes/search route.
 
+Use these jest flags to see test coverage:` --coverage --coverageDirectory='coverage' `
 
 ## Timeline
 
@@ -117,3 +118,7 @@ By June 6, I would like to have finished the /recipes routes and its correspondi
 By June 13, I would like to have finished the /menu routes and its corresponding dao methods.
 
 By June 18, I would like to have finished debugging all my inevitable bugs. If I'm done before then, I would like to use aggregation or lookups in the /recipes/search route; so the app can have filters for the recipes.
+
+## Future features
+
+- The grocery list displays each ingredient only once. TODO: Add smart unit conversions.

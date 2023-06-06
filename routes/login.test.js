@@ -14,14 +14,11 @@ describe('/login', () => {
   const freeUser = {
     email: 'checkov@starfleet.org',
     password: 'iH3artIrina',
-    roles: ['user']
   };
   const adminUser = {
     email: 'demosthenes@ColMin.gov',
     password: 'p3t3rSux',
-    roles: ['user','admin']
   };
-  module.exports = { freeUser, adminUser };
 
   describe('POST / signup', () => {
 

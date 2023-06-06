@@ -4,7 +4,7 @@
   "description": "Virtual recipe box that can save your meal plan and can create a grocery list from it.",
   "main": "index.js",
   "scripts": {
-    "test": "jest  --runInBand --coverage --coverageDirectory='coverage'",
+    "test": "jest  --runInBand",
     "start": "node server.js"
   },
   "repository": {
