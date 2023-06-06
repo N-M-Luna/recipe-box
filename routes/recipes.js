@@ -158,10 +158,31 @@ router.get('/:userId', async (req, res, next) => {
 Updates an existing recipe.
 Authenticated users can update only their own recipes.
 */
-//router.put('/:recipeId', isAuthenticated, async (req, res, next) => {
-//If author is same as req.userId, update recipe
-//If not, return 403
-//})
+router.put('/:recipeId', isAuthenticated, async (req, res, next) => {
+    try{
+        //Check that the body is not empty
+        const recipeUpdates = req.body;
+        if (!recipeUpdates || JSON.stringify(recipeUpdates)==='{}') {
+            res.status(400).send(`Missing updates to the recipe.`);
+
+        } else {
+            const recipeId = req.params.recipeId;
+            const recipeInDB = await recipeDAO.getbyId(recipeId);
+
+            //If author is same as req.userId, update recipe
+            if (recipeInDB.author === req.userId) {
+                const updatedRecipe = await recipeDAO.updateByID(recipeId, recipeUpdates);
+                res.status(200).send(updatedRecipe);
+            } else {
+
+                //If not, return 403
+                res.status(403).send(`User not authorized to change recipe.`);
+            }
+        }
+    } catch(e) {
+        next(e);
+    }
+})
 
 /* DELETE /:recipeId
 Deletes a recipe.

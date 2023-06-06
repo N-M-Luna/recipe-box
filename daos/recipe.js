@@ -19,6 +19,11 @@ module.exports.getByAuthor = async (author) => {
     return recipesInDB;
 }
 
+//Gets a recipe by ID
+module.exports.getbyId = async (recipeId) => {
+    return await Recipe.findOne({ _id: recipeId }).lean();
+}
+
 //Gets a recipe by the title
 module.exports.findByTitle = async (title) => {
     return await Recipe.findOne({title}).lean();
@@ -35,3 +40,8 @@ module.exports.getByQuery = async (searchWord) => {
 //Get recipes by ingredientID
 //module.exports.getByIngredient = async (ingredientID) => {}
 //[Nat Note]: I might need to re-structure the recipes to do this...?
+
+//Update recipe by ID
+module.exports.updateByID = async (recipeId, newRecipe) => {
+    return await Recipe.updateOne({_id: recipeId}, newRecipe);
+}
