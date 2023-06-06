@@ -292,7 +292,7 @@ describe('/recipes', () => {
       //get recipes with keywords: ['Caribbean', 'sushi', 'oven']
       //For each:
       //expect response to contain 1 recipe
-      const response = await request(server).get("/books/search?query=" + encodeURI(searchTerm));
+      const response = await request(server).get("/recipes/search?query=" + encodeURI(searchTerm));
       expect(response.statusCode).toEqual(200);
       expect(response.body.length).toEqual(1);
     });

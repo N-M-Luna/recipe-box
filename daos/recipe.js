@@ -23,3 +23,15 @@ module.exports.getByAuthor = async (author) => {
 module.exports.findByTitle = async (title) => {
     return await Recipe.findOne({title}).lean();
 }
+
+//Get recipes by search word
+module.exports.getByQuery = async (searchWord) => {
+    return await Recipe.find(
+        { $text: { $search: searchWord } },
+        { score: { $meta: 'textScore' } }
+    ).sort({ score: { $meta: 'textScore' } }).lean();
+}
+
+//Get recipes by ingredientID
+//module.exports.getByIngredient = async (ingredientID) => {}
+//[Nat Note]: I might need to re-structure the recipes to do this...?

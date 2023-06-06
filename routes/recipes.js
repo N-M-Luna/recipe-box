@@ -88,6 +88,33 @@ router.get('/', async (req, res, next) => {
     }
 })
 
+/* GET /search
+Reads all recipes that match a query (by text search or by ingredientID)
+*/
+router.get('/search', async (req, res, next) => {
+  const {ingredient, query} = req.query;
+  try {
+    let queryResponse;
+
+    if (ingredient) {
+        const ingredientID = await ingredientDAO.findByName(ingredient);
+        if (ingredientID) {
+            queryResponse = await recipeDAO.getByIngredient(ingredientID);
+        } else {
+            queryResponse = {}
+        }
+
+    } else if (query) {
+        queryResponse = await recipeDAO.getByQuery(query);
+    } else {
+
+    }
+    res.status(200).send(queryResponse);
+  } catch(e) {
+    next(e);
+  }
+})
+
 /* GET /:userId
 Reads all recipes by user with id: userId.
 */
@@ -126,13 +153,6 @@ router.get('/:userId', async (req, res, next) => {
         next(e);
     }
 })
-
-/* GET /search
-Reads all recipes that match a query (by text search or by ingredient)
-*/
-//router.get('/search', async (req, res, next) => {
-//Use aggregation for text search and lookup for ingredient?
-//})
 
 /* PUT /:recipeId
 Updates an existing recipe.

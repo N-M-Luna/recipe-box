@@ -9,4 +9,6 @@ const recipeSchema = new mongoose.Schema({
     cuisine: { type: String, required: true }
 });
 
+recipeSchema.index({ title: 'text', instructions: 'text', cuisine: 'text' })
+
 module.exports = mongoose.model('recipe', recipeSchema);
