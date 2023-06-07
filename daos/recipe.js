@@ -1,5 +1,4 @@
 const Recipe = require('../models/recipe');
-
 module.exports = {};
 
 //Stores a recipe
@@ -44,4 +43,9 @@ module.exports.getByQuery = async (searchWord) => {
 //Update recipe by ID
 module.exports.updateByID = async (recipeId, newRecipe) => {
     return await Recipe.updateOne({_id: recipeId}, newRecipe);
+}
+
+//Delete recipe by ID
+module.exports.deleteById = async (recipeId) => {
+    return await Recipe.deleteOne({ _id: recipeId });
 }

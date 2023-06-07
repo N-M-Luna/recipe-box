@@ -441,14 +441,14 @@ describe('/recipes', () => {
 
       const eggRes = await request(server)
         .post('/recipes')
-        .set('Authorization', 'Bearer ' + userToken)
-        .send(dehydratedPizza);
+        .set('Authorization', 'Bearer ' + adminToken)
+        .send(tamagoyaki);
 
         tamagoyakiRecipeId = eggRes.body._id;
     });
     afterEach(testUtils.clearDB);
 
-    it('should return 200 when %users tried to delete their own recipe', async () => {
+    it('should return 200 when users tried to delete their own recipe', async () => {
       //freeUser requests to delete recipe by freeUser
       const response = await request(server)
         .delete(`/recipes/${pizzaRecipeId}`)
@@ -457,9 +457,9 @@ describe('/recipes', () => {
       //expect a 200
       expect(response.statusCode).toEqual(200);
 
-      //expect there to be 1 recipe in the DB
-      const recipesInDB = await Recipe.find().lean();
-      expect(recipesInDB.length).toEqual(1);
+      //expect it to be deleted
+      const storedRecipe = await Recipe.findOne({ _id: pizzaRecipeId });
+      expect(storedRecipe).toBeNull();
     });
 
     it('should return 200 when admin user tries to delete recipe by someone else', async () => {

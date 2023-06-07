@@ -189,11 +189,29 @@ Deletes a recipe.
 Authenticated users can delete their own recipes.
 Authorized users can delete any recipe.
 */
-//router.delete('/:recipeId', isAuthenticated, async (req, res, next) => {
-//Grab user from req.userId and recipe from req.params
-//If user is admin OR if user is same as recipe author, delete the recipe.
-//If not, return 403
-//})
+router.delete('/:recipeId', isAuthenticated, async (req, res, next) => {
+    try {
+        //Grab user from req.userId
+        const userId = req.userId;
+        const user = await userDAO.getUser(userId);
+        //and recipe from req.params
+        const recipeId = req.params.recipeId;
+        const recipe = await recipeDAO.getbyId(recipeId);
+
+
+        //If user is admin OR if user is same as recipe author, delete the recipe.
+        if (recipe.author === user.email || user.roles.includes('admin')) {
+            await recipeDAO.deleteById(recipeId);
+            res.sendStatus(200);
+        } else {
+
+            //If not, return 403
+            res.status(403).send(`User is not authorized to delete this recipe.`);
+        }
+    } catch (e) {
+        next(e);
+    }
+})
 
 
 module.exports = router;
