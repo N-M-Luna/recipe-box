@@ -21,3 +21,15 @@ module.exports.updateUserPassword = async (email, password) => {
 module.exports.removeUser = async (userId) => {
     return await User.findOneAndDelete({_id: userId});
 }
+
+//Gets user's menu (Will change duplicate string arrays into one string with their quantities added.)
+//module.exports.getMenu = async (userId) => {}
+
+//Adds a recipe from the user's menu (and required ingredients from the user's grocery list)
+//module.exports.addRecipe = async (userId, recipeObj) => {} //Or recipeID
+
+//Removes a recipe from the user's menu (and required ingredients to the user's grocery list)
+//module.exports.removeRecipe = async (userId, recipeObj) => {} //Or recipeID
+
+//Deletes all recipes from the user's menu (and corresponding ingredients to/from the user's grocery list)
+//module.exports.clearMenu = async (userId) => {}

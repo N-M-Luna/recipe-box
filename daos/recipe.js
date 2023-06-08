@@ -38,7 +38,7 @@ module.exports.getByQuery = async (searchWord) => {
 
 //Get recipes by ingredientID
 //module.exports.getByIngredient = async (ingredientID) => {}
-//[Nat Note]: I might need to re-structure the recipes to do this...?
+//[Nat Note]: I might need to re-structure the recipes to do this...? Or learn more about aggregation.
 
 //Update recipe by ID
 module.exports.updateByID = async (recipeId, newRecipe) => {

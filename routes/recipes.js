@@ -1,8 +1,7 @@
 const { Router } = require('express');
 const router = Router();
-const { isAuthenticated, isAuthorized } = require('./middleware');
+const { isAuthenticated } = require('./middleware');
 const userDAO = require('../daos/user');
-const tokenDAO = require('../daos/token');
 const recipeDAO = require('../daos/recipe');
 const ingredientDAO = require('../daos/ingredient');
 

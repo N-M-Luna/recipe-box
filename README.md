@@ -4,6 +4,18 @@ Final project for JSCRIPT 330 B <br>
 Spring 2023 <br>
 University of Washington
 
+## [June 11 Update]
+
+**DONE.** Set up Express server.
+
+**DONE.** Write /login tests, routes, and corresponding daos and models.
+
+**DONE.**  Write /recipe tests, routes and corresponding daos and models.
+
+**TODO.** Write /menu tests, routes, and corresponding daos and models.
+
+**TODO.** Fix 2 failing /login tests.
+
 ## June 4 Update
 
 **DONE.** Set up Express server.
@@ -77,7 +89,7 @@ This app is my solution to meal planning for the week.
 
 - GET **/recipes/:userId** - reads all recipes by user with id: userId.
 
-- GET **/recipes/search** - reads all recipes that match a query (by text search or by ingredient)
+- GET **/recipes/search** - reads all recipes that match a query (by text search)
 
 - PUT **/recipes/:recipeId** - updates an existing recipe. (Authenticated users can update only their own recipes.)
 
@@ -91,9 +103,11 @@ This app is my solution to meal planning for the week.
 
 - GET **/grocery-list** - reads the user's grocery list
 
-- PUT **/menu/** - update user's menu to include a recipe and the user's grocery list to include the corresponding ingredients.
+- PUT **/menu/:recipeId** - update user's menu to include a recipe and the user's grocery list to include the corresponding ingredients.
 
 - DELETE **/menu/** - delete all recipes from user's menu and all ingredients from user's grocery list.
+
+- DELETE **/menu/:recipeId** - delete a recipe from user's menu and corresponding ingredients from user's grocery list.
 
 ## Project requirements
 
@@ -103,9 +117,9 @@ This app is my solution to meal planning for the week.
 
 - The following fields should be **unique**: name (in ingredients), title (in recipes), and  email (in user).
 
-- The Author field (in the Recipe model) will have an **index**, for use in the /recipes/:userId route. The Ingredients field will also have an index, for use in the /recipes/search route.
+- The Author field (in the Recipe model) has an **index**, for use in the /recipes/:userId route. (The Ingredients field will also have an index, for use in the /recipes/search route.)
 
-- The Title, Instructions, and Cuisine fields (in the Recipe model) will be included in the **text search** for the /recipes/search route.
+- The Title, Instructions, and Cuisine fields (in the Recipe model) are included in the **text search** for the /recipes/search route.
 
 Use these jest flags to see test coverage:` --coverage --coverageDirectory='coverage' `
 
@@ -121,5 +135,7 @@ By June 18, I would like to have finished debugging all my inevitable bugs. If I
 
 ## Future features/Bugs
 
-- Fix: Make use of plural names of ingredients.
-- Add: The grocery list displays each ingredient only once. TODO: Add smart unit conversions.
+- Add a recipe DAO method to search by ingredients.
+- Make use of plural names of ingredients.
+- Make the grocery list display each ingredient only once. (Needs good unit conversions.)
+- Add recipe DAO methods to search by other fields.
