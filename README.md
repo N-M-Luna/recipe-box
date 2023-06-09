@@ -12,7 +12,9 @@ University of Washington
 
 **DONE.**  Write /recipe tests, routes and corresponding daos and models.
 
-**TODO.** Write /menu tests, routes, and corresponding daos and models.
+**DONE.**  Write /menu tests.
+
+**WIP.** Write /menu routes, and corresponding daos and models. (The DAO methods that use aggregation are buggy.)
 
 **TODO.** Fix 2 failing /login tests.
 
@@ -140,4 +142,7 @@ By June 18, I would like to have finished debugging all my inevitable bugs. If I
 - Make the grocery list display each ingredient only once. (Needs good unit conversions.)
 - Add recipe DAO methods to search by other fields.
 - Add admin routes.
-- Improve the userDAO.getMenu method. (Reduce the amount of calls to the server.)
+
+## Self-evaluation
+
+> TODO Evaluate your approach and results, what you learned, and what you would like to do differently or improve upon. Explain what worked well and what didn't. The expectation is that this will not be a brief statement.

@@ -26,7 +26,7 @@ async function isAuthenticated (req, res, next) {
 
             //And check that there is a userID associated with it.
             if (!tokenUserId) {
-                res.status(401).send("User not logged in.");
+                res.status(401).send('User not logged in.');
             } else {
                 req.userId = tokenUserId;
                 next();

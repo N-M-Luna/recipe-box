@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for recipe-box/daos/token.js</title>
+    <title>Code coverage report for recipe-box/daos/ingredient.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">recipe-box/daos</a> token.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">recipe-box/daos</a> ingredient.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
@@ -92,64 +92,67 @@
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
-<span class="cline-any cline-yes">68x</span>
+<span class="cline-any cline-yes">100x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">75x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">75x</span>
+<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const Token = require('../models/token');
-const uuid = require('uuid');
+<span class="cline-any cline-yes">107x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const Ingredient = require('../models/ingredient');
 &nbsp;
 module.exports = {};
 &nbsp;
-//Returns a string after creating a Token record
-module.exports.makeTokenForUserId = async (userId) =&gt; {
-&nbsp;
-    //Generate a token for user with ID: userId
-    const token = uuid.v4();
-&nbsp;
-    //Create a token that is associated with that user
-    const newToken = await Token.create({token, userId});
-    return newToken.token;
+//Create a new ingredient
+module.exports.createIngredient = async (ingredientObj) =&gt; {
+    return await Ingredient.create(ingredientObj);
 }
 &nbsp;
-//Returns a userId string using the tokenString to get a Token record
-module.exports.getUserIdFromToken = async (token) =&gt; {
-&nbsp;
-    //Grab the token with the given tokenString
-    const tokenInUse = await Token.findOne({token});
-&nbsp;
-    //Return the userId associated with that token.
-    return tokenInUse.userId;
+//Find an ingredient by ID
+module.exports.findById = async (ingredientID) =&gt; {
+    return await Ingredient.findOne({_id: ingredientID});
 }
 &nbsp;
-//Deletes the corresponding Token record
-module.exports.removeToken = async (token) =&gt; {
-    return await Token.deleteOne({token});
+//Find an ingredient by name
+module.exports.findByName = async (ingredientName) =&gt; {
+    return await Ingredient.findOne({name: ingredientName}).lean();
+    /*
+    const foundInSingularForm = await Ingredient.findOne({name: ingredientName}).lean();
+    if (foundInSingularForm) {
+        return foundInSingularForm;
+    }
+    const foundInPluralForm = await Ingredient.findOne({plural: ingredientName}).lean();
+    return foundInPluralForm;
+    */
+}
+&nbsp;
+//Get all ingredients (For testing)
+module.exports.getAll = <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
+<span class="cstat-no" title="statement not covered" >    return await Ingredient.find().lean();</span>
 }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

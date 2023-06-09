@@ -1,4 +1,5 @@
 const request = require('supertest');
+const { default: mongoose } = require('mongoose');
 
 const server = require('../server');
 const testUtils = require('../test-utils');
@@ -53,7 +54,7 @@ describe('/menu', () => {
         });
         describe('DELETE /', () => {
             it('should return 401', async () => {
-                const response = await request(server).put(`/menu`);
+                const response = await request(server).delete('/menu');
                 expect(response.statusCode).toEqual(401);
             });
         });
@@ -84,11 +85,11 @@ describe('/menu', () => {
             const arrozResponse = await request(server)
                 .post('/recipes')
                 .set('Authorization', 'Bearer ' + userToken)
-                .send(dehydratedPizza);
+                .send(arrozConHabichuelas);
             arrozConHabichuelasID = arrozResponse.body._id;
             riceID = arrozResponse.body.ingredients[0][2];
-            beansID = arrozResponse.body.ingredients[1][2];
-            sofritoID = arrozResponse.body.ingredients[2][2];
+            //beansID = arrozResponse.body.ingredients[1][2];
+            //sofritoID = arrozResponse.body.ingredients[2][2];
         })
         afterEach(testUtils.clearDB);
 
@@ -130,23 +131,23 @@ describe('/menu', () => {
         });
 
         describe('PUT / :recipeId', () => {
-            it('should return 200 and update the menu with a valid recipeId', async () => {
+            it('should return 200 and update the menu', async () => {
                 const response = await request(server)
                     .put(`/menu/${pizzaRecipeID}`)
                     .set('Authorization', 'Bearer ' + userToken)
                     .send();
                 expect(response.statusCode).toEqual(200);
                 const user = await User.findOne({email: freeUser.email}).lean();
-                expect(user.menu).toContain(pizzaRecipeID);
+                expect(user.menu[0].toString()).toEqual(pizzaRecipeID);
             });
-            it('should return 200 and update the grocery list with a valid recipeId', async () => {
+            it('should return 200 and update the grocery list', async () => {
                 const response = await request(server)
                     .put(`/menu/${arrozConHabichuelasID}`)
                     .set('Authorization', 'Bearer ' + adminToken)
                     .send();
                 expect(response.statusCode).toEqual(200);
-                const adminUser = await User.findOne({email: adminUser.email}).lean();
-                expect(adminUser.groceryList).toContain(arrozConHabichuelas.ingredients[1]);
+                const adminUserInDB = await User.findOne({email: adminUser.email}).lean();
+                expect(adminUserInDB.groceryList).toContain(new mongoose.Types.ObjectId(riceID));
             });
             it('should return 400 with an invalid recipeId', async () => {
                 const response = await request(server)
@@ -164,9 +165,9 @@ describe('/menu', () => {
                     .set('Authorization', 'Bearer ' + adminToken)
                     .send();
                 expect(response.statusCode).toEqual(200);
-                const adminUser = await User.findOne({email: adminUser.email}).lean();
-                expect(adminUser.menu).toBe([]);
-                expect(adminUser.groceryList).toBe([]);
+                const adminUserInDB = await User.findOne({email: adminUser.email}).lean();
+                expect(adminUserInDB.menu.length).toEqual(0);
+                expect(adminUserInDB.groceryList.length).toEqual(0);
             });
         });
 
@@ -179,7 +180,7 @@ describe('/menu', () => {
                 expect(response.statusCode).toEqual(200);
 
                 const user = await User.findOne({email: freeUser.email}).lean();
-                expect(user.menu).not.toContain(pizzaRecipeID);
+                expect(user.menu).not.toContain(new mongoose.Types.ObjectId(pizzaRecipeID));
             });
             it('it should return 200 and update the grocery list', async () => {
                 const response = await request(server)
@@ -187,8 +188,8 @@ describe('/menu', () => {
                     .set('Authorization', 'Bearer ' + adminToken)
                     .send();
                 expect(response.statusCode).toEqual(200);
-                const adminUser = await User.findOne({email: adminUser.email}).lean();
-                expect(adminUser.groceryList).not.toContain(arrozConHabichuelas.ingredients[1]);
+                const adminUserInDB = await User.findOne({email: adminUser.email}).lean();
+                expect(adminUserInDB.groceryList).not.toContain(new mongoose.Types.ObjectId(riceID));
             });
             it('should return 400 with an invalid recipeId', async () => {
                 const response = await request(server)
