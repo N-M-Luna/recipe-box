@@ -92,14 +92,12 @@ describe('/login', () => {
       token0 = response0.body.token;
     })
 
-//FAILS
     it('should return 200 and change password for authenticated user', async () => {
       const passwordResponse = await request(server)
         .put('/login/password')
         .set('Authorization', 'Bearer ' + token0)
         .send({ password: `newString` });
       expect(passwordResponse.statusCode).toEqual(200);
-      //BUG: Sends back 401 due to a BAD token. I checked that: Token0 is defined; User is created in DB;
 
       const oldLoginResponse = await request(server).post('/login').send({freeUser});
       expect(oldLoginResponse.statusCode).toEqual(401);
@@ -175,7 +173,6 @@ describe('/login', () => {
     })
     afterEach(testUtils.clearDB);
 
-//FAILS
     it('should delete the user and return 200 with an admin token', async () => {
       let usersInDB = await User.find().lean()
 
@@ -184,10 +181,9 @@ describe('/login', () => {
         .set('Authorization', 'Bearer ' + adminToken)
         .send();
       expect(response.statusCode).toEqual(200);
-      //BUG: Returns a 404...?
 
       usersInDB = await User.find().lean()
-      expect(usersInDB.length).toEqual(1) //Passes
+      expect(usersInDB.length).toEqual(1)
     });
 
     it('should return 401 with a bogus token', async () => {

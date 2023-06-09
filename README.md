@@ -139,3 +139,5 @@ By June 18, I would like to have finished debugging all my inevitable bugs. If I
 - Make use of plural names of ingredients.
 - Make the grocery list display each ingredient only once. (Needs good unit conversions.)
 - Add recipe DAO methods to search by other fields.
+- Add admin routes.
+- Improve the userDAO.getMenu method. (Reduce the amount of calls to the server.)

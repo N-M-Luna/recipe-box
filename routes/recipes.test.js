@@ -275,7 +275,7 @@ describe('/recipes', () => {
         .send(arrozConHabichuelas);
     });
     afterEach(testUtils.clearDB);
-/* I'll brign these back after updating recipe model
+/* I'll bring these back after updating recipe model
     it('should return all recipes that have queried ingredient', async () => {
       //get recipes with ingredients: 'dehydrated pizza', 'rice'
       //expect first to return 1 recipe, second to return 2.

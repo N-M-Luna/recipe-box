@@ -22,7 +22,7 @@ module.exports.removeUser = async (userId) => {
     return await User.findOneAndDelete({_id: userId});
 }
 
-//Gets user's menu (Will change duplicate string arrays into one string with their quantities added.)
+//Gets user's menu (change recipe ids for recipes. And in the recipes, change ingredients to be an array of strings)
 //module.exports.getMenu = async (userId) => {}
 
 //Adds a recipe from the user's menu (and required ingredients from the user's grocery list)
