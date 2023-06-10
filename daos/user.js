@@ -60,15 +60,16 @@ module.exports.getGroceryList = async (email) => {
     const userInDB = (await User.aggregate([
         { $match:  { email } },
         { $project: { groceryList: true }}, //TRY: add a new ingredientID fields with the third element of each array in the groceryList field.
-        // { $lookup: { //Lookup the ingredients' name by ._ids in ingredients field.
+        // { $lookup: { //TRY: Lookup the ingredients' name with the ingredientID field.
         //     from: 'Ingredient',
         //     localField: 'ingredientID',
         //     foreignField: '_id',
         //     pipeline: [{ $project: {name: true, _id: false}}],
-        //     as: 'ingredientObjs'
+        //     as: 'ingredientNames'
         // }},
+        // {...?} //TRY: Re-write the third element of each array[i] in the groceryList field with the string[i] in the ingredientNames field.
     ]))[0];
-    let ingredients = userInDB.groceryList;
+    let ingredients = userInDB.groceryList; //
 
     //Grab the ingredient IDs
     const ingredientIDs = []
