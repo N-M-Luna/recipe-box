@@ -27,47 +27,73 @@ module.exports.removeUser = async (userId) => {
 
 //Gets user's menu (change recipe ids for recipes. And in the recipes, change ingredients' third element from ._id to .name)
 module.exports.getMenu = async (email) => {
-    return await User.aggregate([
-        //Find the user by their email
-        { $match :  { email } },
-         //Keep only their menu
-        { $project: { menu: true }},
-        //Look up the recipe docs by ._id's in menu
-        // { $lookup: {
-        //        from: 'Recipe',
-        //        localField: 'menu',
-        //        foreignField: '_id',
-        //        as: 'recipes'
-        // }},
-        //Keep only this array of recipe docs
-        { $project: { recipes: true }},
-        //Lookup the ingredients' name by ._ids in ingredients field.
-        // { $lookup: {
-        //     from: 'Ingredient',
-        //     localField: 'recipes.ingredients', //????
-        //     foreignField: '_id',
-        //     as: 'ingredientObjs'
-        // }},
-     //Re-structure the docs: {recipes} -> {title, author, instructions, prepTime, ingredients: [ingr[0], ingr[1], ingredientObjs.name, cuisine}
+    const menuDocs = await User.aggregate([
+        { $match:  { email } },
+        { $project: { menu: true }}, // Docs returned: {menu: [recipeId_1, recipeId_2, ...]}
+        { $lookup: //Look up the recipe docs by their ._id's in the menu field
+            {
+                from: 'Recipe',
+                localField: 'menu', //array
+                foreignField: '_id',
+                //use pipeline to $lookup Ingredient docs?
+                // pipeline: [{
+                //     $lookup: {
+                //         from: 'Ingredient',
+                //         localField: '$recipes.ingredients[0]', //????
+                //         foreignField: '_id',
+                //         as: 'ingredientObjs'
+                //     }
+                // }],
+               as: 'recipes'
+            }
+        },
+        { $project: { recipes: true }},// Docs returned: {recipes: [fullRecipe_1, fullRecipe_2, ...]}
     ]);
+    //console.log(menuDocs);
+    return menuDocs;
 }
 
 //Gets user's grocery list (change ingredients' third element from ._id to .name)
 module.exports.getGroceryList = async (email) => {
-    return await User.aggregate([
-        //Find the user by their email
-        { $match :  { email } },
-         //Keep only their grocery list
-        { $project: { groceryList: true }},
-        //Lookup the ingredients' name by ._ids in ingredients field.
-        // { $lookup: {
+
+    //Grab the grocery list with ingredientIds
+    const userInDB = (await User.aggregate([
+        { $match:  { email } },
+        { $project: { groceryList: true }}, //TRY: add a new ingredientID fields with the third element of each array in the groceryList field.
+        // { $lookup: { //Lookup the ingredients' name by ._ids in ingredients field.
         //     from: 'Ingredient',
-        //     localField: 'groceryList', //????
+        //     localField: 'ingredientID',
         //     foreignField: '_id',
+        //     pipeline: [{ $project: {name: true, _id: false}}],
         //     as: 'ingredientObjs'
         // }},
-     //Re-structure the docs: {groceryList} -> {ingr[0], ingr[1], ingredientObjs.name}
-]);
+    ]))[0];
+    let ingredients = userInDB.groceryList;
+
+    //Grab the ingredient IDs
+    const ingredientIDs = []
+    for (let i = 0; i < ingredients.length; i++) {
+        ingredientIDs.push(ingredients[i][2]);
+    }
+    //Grab the ingredient names
+    const ingredientNames = await Ingredient.aggregate([
+        { $match: { _id: { $in: ingredientIDs } }}
+    ]);
+
+    //Replace the third element of each array in the groceryList field with each string in the ingredientNames array.
+    let ingredientStr
+    const groceryList = []
+    for (let i = 0; i < ingredientNames.length; i++) {
+        ingredientStr = ingredients[i][0].toString();
+        if (ingredients[i][1].length > 0) {
+            ingredientStr += ` ${ingredients[i][1]}`
+        }
+        ingredientStr += ` ${ingredientNames[i].name}`
+        console.log(ingredientStr)
+        groceryList.push(ingredientStr);
+        console.log(groceryList)
+    }
+    return groceryList;
 }
 
 //Adds a recipe from the user's menu (and required ingredients from the user's grocery list)
@@ -76,9 +102,12 @@ module.exports.addRecipe = async (email, recipeID) => {
     if (!mongoose.Types.ObjectId.isValid(recipeID)) {
         return null;
     } else {
-        //const ingredientsForRecipe = await Recipe.find({ _id: recipeID}).lean();
-        //TODO add corresponding ingredients to groceryList
-        return await User.updateOne({ email }, { $push: { menu:  new mongoose.Types.ObjectId(recipeID) } }).lean();
+        const recipeInDocs = (await Recipe.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(recipeID)} },
+            { $project: { ingredients: true } },
+        ]))[0];
+        const ingredientsInRecipe = recipeInDocs.ingredients;
+        return await User.updateOne({ email }, { $push: { menu:  new mongoose.Types.ObjectId(recipeID) }, $set: {groceryList: ingredientsInRecipe  } }).lean();
     }
 }
 
@@ -87,13 +116,13 @@ module.exports.removeRecipe = async (email, recipeID) => {
     if (!mongoose.Types.ObjectId.isValid(recipeID)) {
         return null;
     } else {
-        //const ingredientsForRecipe = await Recipe.find({ _id: recipeID}).lean();
-        //TODO remove corresponding ingredients from groceryList
-        return await User.updateOne({ email }, { $pull: { menu: new mongoose.Types.ObjectId(recipeID) } }).lean();
+        const recipeInDocs = await Recipe.findOne({ _id: recipeID }).lean();
+        const ingredientsInRecipe = recipeInDocs.ingredients;
+        return await User.updateOne({ email }, { $pull: { menu: new mongoose.Types.ObjectId(recipeID) , groceryList: { $in: ingredientsInRecipe } } }).lean();
     }
 }
 
-//Deletes all recipes from the user's menu (and corresponding ingredients to/from the user's grocery list)
+//Deletes all recipes from the user's menu (and corresponding ingredients from the user's grocery list)
 module.exports.clearMenu = async (email) => {
     return await User.updateOne({ email }, { $set: { menu: [] } }).lean();
 }

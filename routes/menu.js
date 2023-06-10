@@ -10,8 +10,6 @@ router.get('/', isAuthenticated, async (req, res, next) => {
     try {
         const userEmail = req.userId;
         const userMenu = await userDAO.getMenu(userEmail);
-        //console.log(userMenu)
-        //Change ingredients field (from array of three strings to a readable string)
         if (userMenu) {
             res.status(200).send(userMenu);
         } else {

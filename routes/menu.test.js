@@ -34,10 +34,26 @@ describe('/menu', () => {
         prepTime: [0, 0, 30],
         cuisine: 'Caribbean'
     };
+    const dehydratedPizzaString = {
+        title: 'Dehydrated pizza',
+        ingredients: [['1 dehydrated pizza']],
+        instructions: 'Place in oven. Enjoy the show.',
+        prepTime: [0, 0, 3],
+        cuisine: 'American'
+    };
+    const arrozConHabichuelasString = {
+        title: 'Rice and beans',
+        ingredients: ['1 cup rice', '1 can beans', '2 tbsp sofrito'],
+        instructions: 'Mix sofrito, tomato paste and spices in pot. Stir in rice. Add water and bring to boil. Simmer for 15 minutes.',
+        prepTime: [0, 0, 30],
+        cuisine: 'Caribbean'
+    };
+/*
     const [dehydratedPizzaString, arrozConHabichuelasString] = [dehydratedPizza, arrozConHabichuelas].map(recipeObj => ({
             ...recipeObj,
             ingredients: recipeObj.ingredients.map(ingr => `${ingr[0].toString} ${ingr[1].length > 0 ? `${ingr[0]} ` : ``}${ingr[2]}`)
         }));
+        */
 
     describe('before login', () => {
         describe('GET /', () => {
@@ -63,7 +79,7 @@ describe('/menu', () => {
     describe('after login', () => {
 
         let userLoginResponse, userToken, adminLoginResponse, adminToken
-        let pizzaRecipeID, dehydratedPizzaID, riceID, beansID, sofritoID, arrozConHabichuelasID
+        let pizzaRecipeID, dehydratedPizzaID, riceID, arrozConHabichuelasID
         beforeEach(async () => {
 
             await request(server).post('/login/signup').send(freeUser);
@@ -88,15 +104,13 @@ describe('/menu', () => {
                 .send(arrozConHabichuelas);
             arrozConHabichuelasID = arrozResponse.body._id;
             riceID = arrozResponse.body.ingredients[0][2];
-            //beansID = arrozResponse.body.ingredients[1][2];
-            //sofritoID = arrozResponse.body.ingredients[2][2];
         })
         afterEach(testUtils.clearDB);
 
         describe('GET /', () => {
             it('should return 200 and the menu', async () => {
                 const putMenuResponse = await request(server)
-                    .put(`/menu/${dehydratedPizzaID}`)
+                    .put(`/menu/${pizzaRecipeID}`)
                     .set('Authorization', 'Bearer ' + userToken)
                     .send();
                 expect(putMenuResponse.statusCode).toEqual(200);
@@ -106,10 +120,10 @@ describe('/menu', () => {
                     .set('Authorization', 'Bearer ' + userToken)
                     .send();
                 expect(getMenuResponse.statusCode).toEqual(200);
-                expect(getMenuResponse.body).toMatchObject({
+                expect(getMenuResponse.body).toMatchObject([{
                     ...dehydratedPizzaString,
                     author: freeUser.email
-                });
+                }]);
             });
         });
 
@@ -147,7 +161,7 @@ describe('/menu', () => {
                     .send();
                 expect(response.statusCode).toEqual(200);
                 const adminUserInDB = await User.findOne({email: adminUser.email}).lean();
-                expect(adminUserInDB.groceryList).toContain(new mongoose.Types.ObjectId(riceID));
+                expect(adminUserInDB.groceryList[0]).toMatchObject([1, 'cup', new mongoose.Types.ObjectId(riceID)]);
             });
             it('should return 400 with an invalid recipeId', async () => {
                 const response = await request(server)
@@ -184,16 +198,16 @@ describe('/menu', () => {
             });
             it('it should return 200 and update the grocery list', async () => {
                 const response = await request(server)
-                    .put(`/menu/${arrozConHabichuelasID}`)
+                    .delete(`/menu/${arrozConHabichuelasID}`)
                     .set('Authorization', 'Bearer ' + adminToken)
                     .send();
                 expect(response.statusCode).toEqual(200);
                 const adminUserInDB = await User.findOne({email: adminUser.email}).lean();
-                expect(adminUserInDB.groceryList).not.toContain(new mongoose.Types.ObjectId(riceID));
+                expect(adminUserInDB.groceryList.length).toEqual(0);
             });
             it('should return 400 with an invalid recipeId', async () => {
                 const response = await request(server)
-                    .put(`/menu/invalid-recipe-id`)
+                    .delete(`/menu/invalid-recipe-id`)
                     .set('Authorization', 'Bearer ' + userToken)
                     .send();
                 expect(response.statusCode).toEqual(400);
