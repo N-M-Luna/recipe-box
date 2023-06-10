@@ -14,7 +14,7 @@ University of Washington
 
 **DONE.**  Write /menu tests.
 
-**WIP.** Write /menu routes, and corresponding daos and models. (The DAO methods that use aggregation are buggy.)
+**DONE.** Write /menu routes, and corresponding daos and models.
 
 **TODO.** Fix 2 failing /login tests.
 
@@ -137,10 +137,10 @@ By June 18, I would like to have finished debugging all my inevitable bugs. If I
 
 ## Future features/Bugs
 
-- Add a recipe DAO method to search by ingredients.
+- Use aggregation in the user DAO methods.
 - Make use of plural names of ingredients.
 - Make the grocery list display each ingredient only once. (Needs good unit conversions.)
-- Add recipe DAO methods to search by other fields.
+- Add recipe DAO methods to search by ingredients and by other fields.
 - Add admin routes.
 
 ## Self-evaluation

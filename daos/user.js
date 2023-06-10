@@ -31,16 +31,18 @@ module.exports.getMenu = async (email) => {
     //Grab the recipes on the menu
     const userInDB = (await User.aggregate([
         { $match:  { email } },
-        { $lookup: {
-               from: 'recipe',
-               localField: 'menu',
-               foreignField: '_id',
-               as: 'recipeList'
-        }, }, //BUG??? Nothing is coming through
-        { $project: { menu: '$recipeList', groceryList: true, _id: false }},
+        // { $lookup: {
+        //        from: 'recipe',
+        //        localField: 'menu',
+        //        foreignField: '_id',
+        //        as: 'recipeList'
+        // }, }, //BUG??? Nothing is coming through
+        //{ $project: { menu: '$recipeList', groceryList: true, _id: false }},
     ]))[0];
-    let menu = userInDB.menu;
-    console.log(`User's menu and grocery list: `, userInDB)
+    //let menu = userInDB.menu;
+    let menu = await Recipe.aggregate([
+        { $match: { _id: { $in: userInDB.menu }} },
+    ]);
 
     //Grab the ingredient names
     let ingredientIDs = userInDB.groceryList.flatMap(ingredient => ingredient[2]);
@@ -63,8 +65,6 @@ module.exports.getMenu = async (email) => {
             ingredientStr += ` ${menu[j].ingredients[k][1]}`;
         }
         ingredientStr += ` ${ingredientNames[i].name}`;
-        console.log(`Replacing `, menu[j].ingredients[k], `with `, ingredientStr);
-
         menu[j].ingredients[k] = ingredientStr;
     }
     return menu;
@@ -120,7 +120,7 @@ module.exports.addRecipe = async (email, recipeID) => {
         ]))[0];
         const ingredientsInRecipe = recipeInDocs.ingredients;
         return await User.updateOne({ email }, { $push: { menu:  recipeID }, $set: {groceryList: ingredientsInRecipe  } }).lean();
-    } //new mongoose.Types.ObjectId(recipeID)
+    }
 }
 
 //Removes a recipe from the user's menu (and required ingredients to the user's grocery list)
@@ -131,7 +131,7 @@ module.exports.removeRecipe = async (email, recipeID) => {
         const recipeInDocs = await Recipe.findOne({ _id: recipeID }).lean();
         const ingredientsInRecipe = recipeInDocs.ingredients;
         return await User.updateOne({ email }, { $pull: { menu: recipeID , groceryList: { $in: ingredientsInRecipe } } }).lean();
-    } //new mongoose.Types.ObjectId(recipeID)
+    }
 }
 
 //Deletes all recipes from the user's menu (and corresponding ingredients from the user's grocery list)

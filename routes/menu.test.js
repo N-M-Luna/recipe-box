@@ -36,7 +36,7 @@ describe('/menu', () => {
     };
     const dehydratedPizzaString = {
         title: 'Dehydrated pizza',
-        ingredients: [['1 dehydrated pizza']],
+        ingredients: ['1 dehydrated pizza'],
         instructions: 'Place in oven. Enjoy the show.',
         prepTime: [0, 0, 3],
         cuisine: 'American'
