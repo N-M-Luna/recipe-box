@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const Recipe = require('../models/recipe');
 const Ingredient = require('../models/ingredient');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 
 module.exports = {};
 
@@ -27,30 +27,47 @@ module.exports.removeUser = async (userId) => {
 
 //Gets user's menu (change recipe ids for recipes. And in the recipes, change ingredients' third element from ._id to .name)
 module.exports.getMenu = async (email) => {
-    const menuDocs = await User.aggregate([
+
+    //Grab the recipes on the menu
+    const userInDB = (await User.aggregate([
         { $match:  { email } },
-        { $project: { menu: true }}, // Docs returned: {menu: [recipeId_1, recipeId_2, ...]}
-        { $lookup: //Look up the recipe docs by their ._id's in the menu field
-            {
-                from: 'Recipe',
-                localField: 'menu', //array
-                foreignField: '_id',
-                //use pipeline to $lookup Ingredient docs?
-                // pipeline: [{
-                //     $lookup: {
-                //         from: 'Ingredient',
-                //         localField: '$recipes.ingredients[0]', //????
-                //         foreignField: '_id',
-                //         as: 'ingredientObjs'
-                //     }
-                // }],
-               as: 'recipes'
-            }
-        },
-        { $project: { recipes: true }},// Docs returned: {recipes: [fullRecipe_1, fullRecipe_2, ...]}
+        { $lookup: {
+               from: 'recipe',
+               localField: 'menu',
+               foreignField: '_id',
+               as: 'recipeList'
+        }, }, //BUG??? Nothing is coming through
+        { $project: { menu: '$recipeList', groceryList: true, _id: false }},
+    ]))[0];
+    let menu = userInDB.menu;
+    console.log(`User's menu and grocery list: `, userInDB)
+
+    //Grab the ingredient names
+    let ingredientIDs = userInDB.groceryList.flatMap(ingredient => ingredient[2]);
+    const ingredientNames = await Ingredient.aggregate([
+        { $match: { _id: { $in: ingredientIDs } }},
+        { $project: { name: true, _id: false }}
     ]);
-    //console.log(menuDocs);
-    return menuDocs;
+
+    //Replace the third element of each menu ingredients array with the strings in the ingredientNames array.
+    let ingredientStr, j=0, k=-1
+    for (let i = 0; i < ingredientNames.length; i++) {
+        if (k+1 >= menu[j].ingredients.length) {
+            j++;
+            k=0;
+        } else {
+            k++;
+        }
+        ingredientStr = menu[j].ingredients[k][0].toString();
+        if (menu[j].ingredients[k][1].length > 0) {
+            ingredientStr += ` ${menu[j].ingredients[k][1]}`;
+        }
+        ingredientStr += ` ${ingredientNames[i].name}`;
+        console.log(`Replacing `, menu[j].ingredients[k], `with `, ingredientStr);
+
+        menu[j].ingredients[k] = ingredientStr;
+    }
+    return menu;
 }
 
 //Gets user's grocery list (change ingredients' third element from ._id to .name)
@@ -69,14 +86,10 @@ module.exports.getGroceryList = async (email) => {
         // }},
         // {...?} //TRY: Re-write the third element of each array[i] in the groceryList field with the string[i] in the ingredientNames field.
     ]))[0];
-    let ingredients = userInDB.groceryList; //
+    let ingredients = userInDB.groceryList;
 
-    //Grab the ingredient IDs
-    const ingredientIDs = []
-    for (let i = 0; i < ingredients.length; i++) {
-        ingredientIDs.push(ingredients[i][2]);
-    }
-    //Grab the ingredient names
+    //Grab the ingredient IDs and names
+    const ingredientIDs = ingredients.flatMap(ingredient => ingredient[2]);
     const ingredientNames = await Ingredient.aggregate([
         { $match: { _id: { $in: ingredientIDs } }}
     ]);
@@ -90,9 +103,7 @@ module.exports.getGroceryList = async (email) => {
             ingredientStr += ` ${ingredients[i][1]}`
         }
         ingredientStr += ` ${ingredientNames[i].name}`
-        console.log(ingredientStr)
         groceryList.push(ingredientStr);
-        console.log(groceryList)
     }
     return groceryList;
 }
@@ -108,8 +119,8 @@ module.exports.addRecipe = async (email, recipeID) => {
             { $project: { ingredients: true } },
         ]))[0];
         const ingredientsInRecipe = recipeInDocs.ingredients;
-        return await User.updateOne({ email }, { $push: { menu:  new mongoose.Types.ObjectId(recipeID) }, $set: {groceryList: ingredientsInRecipe  } }).lean();
-    }
+        return await User.updateOne({ email }, { $push: { menu:  recipeID }, $set: {groceryList: ingredientsInRecipe  } }).lean();
+    } //new mongoose.Types.ObjectId(recipeID)
 }
 
 //Removes a recipe from the user's menu (and required ingredients to the user's grocery list)
@@ -119,8 +130,8 @@ module.exports.removeRecipe = async (email, recipeID) => {
     } else {
         const recipeInDocs = await Recipe.findOne({ _id: recipeID }).lean();
         const ingredientsInRecipe = recipeInDocs.ingredients;
-        return await User.updateOne({ email }, { $pull: { menu: new mongoose.Types.ObjectId(recipeID) , groceryList: { $in: ingredientsInRecipe } } }).lean();
-    }
+        return await User.updateOne({ email }, { $pull: { menu: recipeID , groceryList: { $in: ingredientsInRecipe } } }).lean();
+    } //new mongoose.Types.ObjectId(recipeID)
 }
 
 //Deletes all recipes from the user's menu (and corresponding ingredients from the user's grocery list)
