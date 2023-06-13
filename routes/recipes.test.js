@@ -84,8 +84,7 @@ describe('/recipes', () => {
 
   //Start Testing
   describe('POST /', () => {
-    //Before each:
-    //sign up and log in free user
+    //Before each: sign up and log in free user
     let userLoginResponse, userToken, adminLoginResponse, adminToken
     beforeEach(async () => {
 
@@ -184,8 +183,7 @@ describe('/recipes', () => {
   });
 
   describe('GET /', () => {
-    //before all:
-    //write three recipes to the DB
+    //before all: write three recipes to the DB
     beforeEach(async () => {
       await request(server).post('/login/signup').send(freeUser);
       const userLoginResponse = await request(server).post('/login').send(freeUser);
@@ -248,8 +246,7 @@ describe('/recipes', () => {
   });
 
   describe('GET / search', () => {
-    //Before all
-    //Write all three recipes to the DB
+    //Before all: Write all three recipes to the DB
     beforeEach(async () => {
 
       await request(server).post('/login/signup').send(freeUser);
@@ -275,7 +272,7 @@ describe('/recipes', () => {
         .send(arrozConHabichuelas);
     });
     afterEach(testUtils.clearDB);
-/* I'll bring these back after updating recipe model
+/* Nat Note. I'll bring these back after updating recipe model
     it('should return all recipes that have queried ingredient', async () => {
       //get recipes with ingredients: 'dehydrated pizza', 'rice'
       //expect first to return 1 recipe, second to return 2.
@@ -300,8 +297,7 @@ describe('/recipes', () => {
   });
 
   describe('GET / :userId', () => {
-    //Before each:
-    //Write all three recipes to the DB
+    //Before each: Write all three recipes to the DB
     beforeEach(async () => {
 
       await request(server).post('/login/signup').send(freeUser);
@@ -348,10 +344,37 @@ describe('/recipes', () => {
 
   });
 
+  /*
+  describe('GET / full / :recipeId', () => {
+    //Before each: Write the tamagoyaki recipe to the DB
+    let tamagoyakiRecipeId;
+    beforeEach(async () => {
+      await request(server).post('/login/signup').send(adminUser);
+      const adminLoginResponse = await request(server).post('/login').send(adminUser);
+      const adminToken = adminLoginResponse.body.token;
+
+      const res = await request(server)
+        .post('/recipes')
+        .set('Authorization', 'Bearer ' + adminToken)
+        .send(tamagoyaki);
+      tamagoyakiRecipeId = res.body._id;
+    });
+    afterEach(testUtils.clearDB);
+
+    it('should return 200 and complete recipe', async () => {
+      const response = await request(server).get(`/recipes/full/${tamagoyakiRecipeId}`);
+      const fullTamagoyaki = {
+        ...tamagoyakiString,
+        author: adminUser.email,
+      };
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toMatchObject(fullTamagoyaki);
+    });
+  });
+  */
+
   describe('PUT / :recipeId', () => {
-    //before each:
-    //sign up and log in freeUser
-    //create recipe by freeUser
+    //before each: sign up and log in freeUser, create recipe by freeUser
     let userLoginResponse, userToken, pizzaRecipeId
     beforeEach(async () => {
       await request(server).post('/login/signup').send(freeUser);
@@ -417,9 +440,7 @@ describe('/recipes', () => {
   });
 
   describe('DELETE /:recipeId', () => {
-    //before each:
-    //Write two recipes to the db
-    //sign up both users
+    //before each: sign up both users, write two recipes to the db
     let pizzaRecipeId, tamagoyakiRecipeId, userLoginResponse, userToken, adminLoginResponse, adminToken
     beforeEach(async () => {
 

@@ -83,7 +83,7 @@ describe('/login', () => {
 
   });
 
-  describe('POST / password', () => {
+  describe('PUT / password', () => {
     let response0, token0
 
     beforeEach(async () => {
@@ -99,6 +99,9 @@ describe('/login', () => {
         .send({ password: `newString` });
       expect(passwordResponse.statusCode).toEqual(200);
 
+      const logoutResponse = await request(server).post('/login/logout').set('Authorization', 'Bearer '+ token0).send();
+      expect(logoutResponse.statusCode).toEqual(200);
+
       const oldLoginResponse = await request(server).post('/login').send({freeUser});
       expect(oldLoginResponse.statusCode).toEqual(401);
 
@@ -106,7 +109,7 @@ describe('/login', () => {
         email: freeUser.email,
         password: `newString`
       });
-      expect(newLoginResponse.statusCode).toEqual(200);
+      expect(newLoginResponse.statusCode).toEqual(200); //returns 401
 
     });
 
@@ -180,7 +183,7 @@ describe('/login', () => {
         .delete('/login/' + freeUser.email)
         .set('Authorization', 'Bearer ' + adminToken)
         .send();
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toEqual(200); //returns 404
 
       usersInDB = await User.find().lean()
       expect(usersInDB.length).toEqual(1)

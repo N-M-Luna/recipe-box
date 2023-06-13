@@ -153,6 +153,22 @@ router.get('/:userId', async (req, res, next) => {
     }
 })
 
+/* GET /full/:recipeId
+Reads recipe with id: recipeId
+router.get('/full/:recipeId', async (req, res, next) => {
+    try {
+        const fullRecipe = await recipeDAO.getbyId(req.params.recipeId);
+        if (fullRecipe) {
+            res.status(200).send(fullRecipe);
+        } else {
+            res.status(404).send('Found no recipe with that ID.')
+        }
+    } catch(e) {
+        next(e);
+    }
+})
+*/
+
 /* PUT /:recipeId
 Updates an existing recipe.
 Authenticated users can update only their own recipes.

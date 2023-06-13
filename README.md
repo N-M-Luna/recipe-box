@@ -4,7 +4,7 @@ Final project for JSCRIPT 330 B <br>
 Spring 2023 <br>
 University of Washington
 
-## [June 11 Update]
+## June 11 Update
 
 **DONE.** Set up Express server.
 
@@ -12,9 +12,7 @@ University of Washington
 
 **DONE.**  Write /recipe tests, routes and corresponding daos and models.
 
-**DONE.**  Write /menu tests.
-
-**DONE.** Write /menu routes, and corresponding daos and models.
+**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
 
 **TODO.** Fix 2 failing /login tests.
 
@@ -142,6 +140,7 @@ By June 18, I would like to have finished debugging all my inevitable bugs. If I
 - Make the grocery list display each ingredient only once. (Needs good unit conversions.)
 - Add recipe DAO methods to search by ingredients and by other fields.
 - Add admin routes.
+- Add a "/recipes/full/:recipeId" route.
 
 ## Self-evaluation
 
