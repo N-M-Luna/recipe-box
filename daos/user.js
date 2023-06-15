@@ -12,7 +12,7 @@ module.exports.createUser = async (userObj) => {
 
 //Gets a user record using their email
 module.exports.getUser = async (email) => {
-    return await User.findOne({email: email});
+    return await User.findOne({ email });
 }
 
 //Updates the user's password field
@@ -21,8 +21,8 @@ module.exports.updateUserPassword = async (email, password) => {
 }
 
 //Deletes a user
-module.exports.removeUser = async (userId) => {
-    return await User.findOneAndDelete({_id: userId});
+module.exports.removeUser = async (email) => {
+    return await User.deleteOne({ email });
 }
 
 //Gets user's menu (change recipe ids for recipes. And in the recipes, change ingredients' third element from ._id to .name)

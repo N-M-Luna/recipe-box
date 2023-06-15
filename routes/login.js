@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const bcrypt = require('bcrypt');
-const {isAuthenticated, isAuthorized} = require('./middleware');
+const {isAuthenticated} = require('./middleware');
 const userDAO = require('../daos/user');
 const tokenDAO = require('../daos/token');
 
@@ -98,7 +98,7 @@ router.put('/password', isAuthenticated, async (req, res, next) => {
             bcrypt.hash(newPassword, salt, async function (err, hash) {
                 try {
                     //Update the user+password doc in Users and return 200 code.
-                    const userWithNewPass = await userDAO.updateUserPassword(req.body.email, hash)
+                    const userWithNewPass = await userDAO.updateUserPassword(req.userId, hash)
                     if (userWithNewPass) {
                         res.sendStatus(200);
                     } else {
@@ -128,17 +128,27 @@ router.post('/logout', isAuthenticated, async (req, res, next) => {
 /** DELETE /:userId
 If the user is authorized, deletes a user with email :userId
 */
-router.delete('/:userId', isAuthenticated, isAuthorized, async (req, res, next) => {
+router.delete('/:userId', isAuthenticated, async (req, res, next) => {
     try {
-        //Grab the user to be deleted
-        const user = await userDAO.getUser(req.params.userId)
+        const userToDelete = await userDAO.getUser(req.params.userId)
+        const userRequesting = await userDAO.getUser(req.userId)
+        const isAdminUser = userRequesting.roles.includes('admin');
 
-        const deletedUser = await userDAO.removeUser(user._id)
-        if (deletedUser) {
-            res.status(200).send(deletedUser);
-        } else {
-            res.status(400).send(`Could not delete user.`);
+        //Check that the user is an admin, or that they're trying to delete their own profile.
+        if (isAdminUser || userToDelete._id===userRequesting._id) {
+
+            const deletedUser = await userDAO.removeUser(req.params.userId)
+            if (deletedUser.acknowledged) {
+                res.status(200).send(deletedUser);
+            } else {
+                res.status(400).send(`Could not delete user.`);
+            }
+
+        } else { //If not, send a 403.
+            res.sendStatus(403)
         }
+
+
     } catch(e) {
         next(e);
     }

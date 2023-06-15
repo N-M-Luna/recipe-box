@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1686421294157" clover="3.2.0">
-  <project timestamp="1686421294158" name="All files">
-    <metrics statements="362" coveredstatements="333" conditionals="99" coveredconditionals="85" methods="53" coveredmethods="52" elements="514" coveredelements="470" complexity="0" loc="362" ncloc="362" packages="4" files="15" classes="15"/>
+<coverage generated="1686859174638" clover="3.2.0">
+  <project timestamp="1686859174638" name="All files">
+    <metrics statements="366" coveredstatements="326" conditionals="103" coveredconditionals="84" methods="53" coveredmethods="50" elements="522" coveredelements="460" complexity="0" loc="366" ncloc="366" packages="4" files="15" classes="15"/>
     <package name="recipe-box">
       <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
       <file name="server.js" path="/Users/nathalieluna/web-dev/recipe-box/server.js">
@@ -71,14 +71,14 @@
         <line num="2" count="3" type="stmt"/>
         <line num="4" count="3" type="stmt"/>
         <line num="7" count="3" type="stmt"/>
-        <line num="10" count="68" type="stmt"/>
-        <line num="13" count="68" type="stmt"/>
-        <line num="14" count="68" type="stmt"/>
+        <line num="10" count="69" type="stmt"/>
+        <line num="13" count="69" type="stmt"/>
+        <line num="14" count="69" type="stmt"/>
         <line num="18" count="3" type="stmt"/>
-        <line num="21" count="75" type="stmt"/>
-        <line num="24" count="75" type="stmt"/>
+        <line num="21" count="76" type="stmt"/>
+        <line num="24" count="76" type="stmt"/>
         <line num="28" count="3" type="stmt"/>
-        <line num="29" count="1" type="stmt"/>
+        <line num="29" count="2" type="stmt"/>
       </file>
       <file name="user.js" path="/Users/nathalieluna/web-dev/recipe-box/daos/user.js">
         <metrics statements="57" coveredstatements="54" conditionals="10" coveredconditionals="7" methods="11" coveredmethods="11"/>
@@ -94,7 +94,7 @@
         <line num="19" count="3" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
         <line num="24" count="3" type="stmt"/>
-        <line num="25" count="2" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
         <line num="29" count="3" type="stmt"/>
         <line num="32" count="1" type="stmt"/>
         <line num="43" count="1" type="stmt"/>
@@ -170,21 +170,21 @@
       </file>
     </package>
     <package name="recipe-box.routes">
-      <metrics statements="234" coveredstatements="209" conditionals="89" coveredconditionals="78" methods="22" coveredmethods="22"/>
+      <metrics statements="238" coveredstatements="202" conditionals="93" coveredconditionals="77" methods="22" coveredmethods="20"/>
       <file name="index.js" path="/Users/nathalieluna/web-dev/recipe-box/routes/index.js">
-        <metrics statements="9" coveredstatements="9" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <metrics statements="9" coveredstatements="7" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
         <line num="8" count="3" type="stmt"/>
         <line num="11" count="3" type="stmt"/>
         <line num="14" count="3" type="stmt"/>
-        <line num="15" count="1" type="cond" truecount="2" falsecount="0"/>
-        <line num="16" count="1" type="stmt"/>
+        <line num="15" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="16" count="0" type="stmt"/>
         <line num="18" count="3" type="stmt"/>
       </file>
       <file name="login.js" path="/Users/nathalieluna/web-dev/recipe-box/routes/login.js">
-        <metrics statements="63" coveredstatements="59" conditionals="33" coveredconditionals="30" methods="8" coveredmethods="8"/>
+        <metrics statements="67" coveredstatements="61" conditionals="37" coveredconditionals="33" methods="8" coveredmethods="8"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
@@ -216,10 +216,10 @@
         <line num="66" count="1" type="stmt"/>
         <line num="70" count="70" type="stmt"/>
         <line num="73" count="70" type="cond" truecount="2" falsecount="0"/>
-        <line num="74" count="2" type="stmt"/>
-        <line num="78" count="68" type="stmt"/>
-        <line num="79" count="68" type="stmt"/>
-        <line num="80" count="68" type="stmt"/>
+        <line num="74" count="1" type="stmt"/>
+        <line num="78" count="69" type="stmt"/>
+        <line num="79" count="69" type="stmt"/>
+        <line num="80" count="69" type="stmt"/>
         <line num="88" count="3" type="stmt"/>
         <line num="90" count="2" type="stmt"/>
         <line num="92" count="2" type="cond" truecount="4" falsecount="0"/>
@@ -234,20 +234,24 @@
         <line num="105" count="0" type="stmt"/>
         <line num="108" count="0" type="stmt"/>
         <line num="118" count="3" type="stmt"/>
-        <line num="119" count="1" type="stmt"/>
-        <line num="120" count="1" type="stmt"/>
-        <line num="121" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="122" count="1" type="stmt"/>
+        <line num="119" count="2" type="stmt"/>
+        <line num="120" count="2" type="stmt"/>
+        <line num="121" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="122" count="2" type="stmt"/>
         <line num="124" count="0" type="stmt"/>
         <line num="131" count="3" type="stmt"/>
         <line num="132" count="2" type="stmt"/>
+        <line num="133" count="2" type="stmt"/>
         <line num="134" count="2" type="stmt"/>
-        <line num="136" count="2" type="stmt"/>
-        <line num="137" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="138" count="1" type="stmt"/>
+        <line num="135" count="2" type="stmt"/>
+        <line num="138" count="2" type="cond" truecount="4" falsecount="0"/>
         <line num="140" count="1" type="stmt"/>
-        <line num="143" count="2" type="stmt"/>
-        <line num="147" count="3" type="stmt"/>
+        <line num="141" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="142" count="1" type="stmt"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="153" count="0" type="stmt"/>
+        <line num="157" count="3" type="stmt"/>
       </file>
       <file name="menu.js" path="/Users/nathalieluna/web-dev/recipe-box/routes/menu.js">
         <metrics statements="47" coveredstatements="39" conditionals="10" coveredconditionals="7" methods="5" coveredmethods="5"/>
@@ -300,30 +304,30 @@
         <line num="94" count="3" type="stmt"/>
       </file>
       <file name="middleware.js" path="/Users/nathalieluna/web-dev/recipe-box/routes/middleware.js">
-        <metrics statements="24" coveredstatements="21" conditionals="8" coveredconditionals="7" methods="2" coveredmethods="2"/>
+        <metrics statements="24" coveredstatements="14" conditionals="8" coveredconditionals="5" methods="2" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
-        <line num="6" count="82" type="stmt"/>
-        <line num="9" count="82" type="stmt"/>
-        <line num="12" count="82" type="cond" truecount="2" falsecount="0"/>
+        <line num="6" count="83" type="stmt"/>
+        <line num="9" count="83" type="stmt"/>
+        <line num="12" count="83" type="cond" truecount="2" falsecount="0"/>
         <line num="13" count="3" type="stmt"/>
-        <line num="17" count="79" type="stmt"/>
-        <line num="20" count="79" type="cond" truecount="2" falsecount="0"/>
+        <line num="17" count="80" type="stmt"/>
+        <line num="20" count="80" type="cond" truecount="2" falsecount="0"/>
         <line num="21" count="4" type="stmt"/>
-        <line num="25" count="75" type="stmt"/>
-        <line num="28" count="75" type="cond" truecount="1" falsecount="1"/>
+        <line num="25" count="76" type="stmt"/>
+        <line num="28" count="76" type="cond" truecount="1" falsecount="1"/>
         <line num="29" count="0" type="stmt"/>
-        <line num="31" count="75" type="stmt"/>
-        <line num="32" count="75" type="stmt"/>
+        <line num="31" count="76" type="stmt"/>
+        <line num="32" count="76" type="stmt"/>
         <line num="37" count="0" type="stmt"/>
-        <line num="42" count="2" type="stmt"/>
-        <line num="44" count="2" type="stmt"/>
-        <line num="45" count="2" type="stmt"/>
-        <line num="48" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="49" count="1" type="stmt"/>
-        <line num="52" count="1" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="48" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
         <line num="56" count="0" type="stmt"/>
-        <line num="58" count="2" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
         <line num="61" count="3" type="stmt"/>
       </file>
       <file name="recipes.js" path="/Users/nathalieluna/web-dev/recipe-box/routes/recipes.js">
@@ -395,30 +399,30 @@
         <line num="145" count="8" type="stmt"/>
         <line num="150" count="2" type="stmt"/>
         <line num="152" count="0" type="stmt"/>
-        <line num="160" count="3" type="stmt"/>
-        <line num="161" count="3" type="stmt"/>
-        <line num="163" count="3" type="stmt"/>
-        <line num="164" count="3" type="cond" truecount="4" falsecount="0"/>
-        <line num="165" count="1" type="stmt"/>
-        <line num="168" count="2" type="stmt"/>
-        <line num="169" count="2" type="stmt"/>
-        <line num="172" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="173" count="1" type="stmt"/>
-        <line num="174" count="1" type="stmt"/>
-        <line num="178" count="1" type="stmt"/>
-        <line num="182" count="0" type="stmt"/>
-        <line num="191" count="3" type="stmt"/>
-        <line num="192" count="3" type="stmt"/>
-        <line num="194" count="3" type="stmt"/>
-        <line num="195" count="3" type="stmt"/>
-        <line num="197" count="3" type="stmt"/>
-        <line num="198" count="3" type="stmt"/>
-        <line num="202" count="3" type="cond" truecount="4" falsecount="0"/>
-        <line num="203" count="2" type="stmt"/>
-        <line num="204" count="2" type="stmt"/>
-        <line num="208" count="1" type="stmt"/>
-        <line num="211" count="0" type="stmt"/>
-        <line num="216" count="3" type="stmt"/>
+        <line num="176" count="3" type="stmt"/>
+        <line num="177" count="3" type="stmt"/>
+        <line num="179" count="3" type="stmt"/>
+        <line num="180" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="181" count="1" type="stmt"/>
+        <line num="184" count="2" type="stmt"/>
+        <line num="185" count="2" type="stmt"/>
+        <line num="188" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="189" count="1" type="stmt"/>
+        <line num="190" count="1" type="stmt"/>
+        <line num="194" count="1" type="stmt"/>
+        <line num="198" count="0" type="stmt"/>
+        <line num="207" count="3" type="stmt"/>
+        <line num="208" count="3" type="stmt"/>
+        <line num="210" count="3" type="stmt"/>
+        <line num="211" count="3" type="stmt"/>
+        <line num="213" count="3" type="stmt"/>
+        <line num="214" count="3" type="stmt"/>
+        <line num="218" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="219" count="2" type="stmt"/>
+        <line num="220" count="2" type="stmt"/>
+        <line num="224" count="1" type="stmt"/>
+        <line num="227" count="0" type="stmt"/>
+        <line num="232" count="3" type="stmt"/>
       </file>
     </package>
   </project>

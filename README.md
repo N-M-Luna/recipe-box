@@ -4,32 +4,6 @@ Final project for JSCRIPT 330 B <br>
 Spring 2023 <br>
 University of Washington
 
-## June 11 Update
-
-**DONE.** Set up Express server.
-
-**DONE.** Write /login tests, routes, and corresponding daos and models.
-
-**DONE.**  Write /recipe tests, routes and corresponding daos and models.
-
-**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
-
-**TODO.** Fix 2 failing /login tests.
-
-## June 4 Update
-
-**DONE.** Set up Express server.
-
-**DONE.** Write /login tests, routes, and corresponding daos and models.
-
-**WIP.**  Write /recipe tests.
-
-**TODO.** Write /recipe routes and corresponding daos and models.
-
-**TODO.** Write /menu tests, routes, and corresponding daos and models.
-
-**TODO.** Fix 2 failing /login tests.
-
 ## Scenario
 
 The user browses recipes and picks the ones they want to make that week. Then, the app puts together the grocery list and menu.
@@ -133,6 +107,68 @@ By June 13, I would like to have finished the /menu routes and its corresponding
 
 By June 18, I would like to have finished debugging all my inevitable bugs. If I'm done before then, I would like to use aggregation or lookups in the /recipes/search route; so the app can have filters for the recipes.
 
+### [June 16 Update]
+
+**DONE.** Set up Express server.
+
+**DONE.** Write /login tests, routes, and corresponding daos and models.
+
+**DONE.**  Write /recipe tests, routes and corresponding daos and models.
+
+**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
+
+**WIP.** Fix 2 failing /login tests.
+
+### June 11 Update
+
+**DONE.** Set up Express server.
+
+**DONE.** Write /login tests, routes, and corresponding daos and models.
+
+**DONE.**  Write /recipe tests, routes and corresponding daos and models.
+
+**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
+
+**TODO.** Fix 2 failing /login tests.
+
+### June 4 Update
+
+**DONE.** Set up Express server.
+
+**DONE.** Write /login tests, routes, and corresponding daos and models.
+
+**WIP.**  Write /recipe tests.
+
+**TODO.** Write /recipe routes and corresponding daos and models.
+
+**TODO.** Write /menu tests, routes, and corresponding daos and models.
+
+**TODO.** Fix 2 failing /login tests.
+
+## Self-evaluation
+
+### My approach
+
+My general approach to this project was based on the instructions/recommendations:
+
+- Brainstorm what the app will do.
+- Sketch a front end -> Determines what routes to build
+- Sketch out what the objects in the DB will look like -> Write tests ->  Write routes -> Write DAO methods
+
+### What I learned
+
+Everything back-end is new to me. So everything I did for this project, I learned in this course. The topics I thought were cool to learn were: basic authentication and authorization, server set-up, aggregation, testing and TDD.
+
+It was tricky to determine the "shape" of the documents in the DB before writing anything else. And it was frustrating to find I might need to or should change how I'm storing recipes in the DB; in particular the ingredients field. This change means having to re-write a lot of DAO methods, routes, and tests.
+
+I think that, as I gain more experience with databases, I will have a better idea of what the documents should look like.
+
+### My results
+
+This is the first piece of code I write for the back-end. The tests made it very clear what I needed to do throughout the project. And I would like to take this approach again for future personal projects.
+
+There are already things I know can do better and which I listed in the [Future features/Bugs](#future-featuresbugs) section.
+
 ## Future features/Bugs
 
 - Use aggregation in the user DAO methods.
@@ -141,7 +177,4 @@ By June 18, I would like to have finished debugging all my inevitable bugs. If I
 - Add recipe DAO methods to search by ingredients and by other fields.
 - Add admin routes.
 - Add a "/recipes/full/:recipeId" route.
-
-## Self-evaluation
-
-> TODO Evaluate your approach and results, what you learned, and what you would like to do differently or improve upon. Explain what worked well and what didn't. The expectation is that this will not be a brief statement.
+- Build a front-end!!

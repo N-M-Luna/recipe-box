@@ -107,9 +107,9 @@ describe('/login', () => {
 
       const newLoginResponse = await request(server).post('/login').send({
         email: freeUser.email,
-        password: `newString`
+        password: 'newString',
       });
-      expect(newLoginResponse.statusCode).toEqual(200); //returns 401
+      expect(newLoginResponse.statusCode).toEqual(200);
 
     });
 
@@ -183,6 +183,7 @@ describe('/login', () => {
         .delete('/login/' + freeUser.email)
         .set('Authorization', 'Bearer ' + adminToken)
         .send();
+
       expect(response.statusCode).toEqual(200); //returns 404
 
       usersInDB = await User.find().lean()
