@@ -107,30 +107,6 @@ By June 13, I would like to have finished the /menu routes and its corresponding
 
 By June 18, I would like to have finished debugging all my inevitable bugs. If I'm done before then, I would like to use aggregation or lookups in the /recipes/search route; so the app can have filters for the recipes.
 
-### [June 16 Update]
-
-**DONE.** Set up Express server.
-
-**DONE.** Write /login tests, routes, and corresponding daos and models.
-
-**DONE.**  Write /recipe tests, routes and corresponding daos and models.
-
-**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
-
-**WIP.** Fix 2 failing /login tests.
-
-### June 11 Update
-
-**DONE.** Set up Express server.
-
-**DONE.** Write /login tests, routes, and corresponding daos and models.
-
-**DONE.**  Write /recipe tests, routes and corresponding daos and models.
-
-**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
-
-**TODO.** Fix 2 failing /login tests.
-
 ### June 4 Update
 
 **DONE.** Set up Express server.
@@ -144,6 +120,30 @@ By June 18, I would like to have finished debugging all my inevitable bugs. If I
 **TODO.** Write /menu tests, routes, and corresponding daos and models.
 
 **TODO.** Fix 2 failing /login tests.
+
+### June 11 Update
+
+**DONE.** Set up Express server.
+
+**DONE.** Write /login tests, routes, and corresponding daos and models.
+
+**DONE.**  Write /recipe tests, routes and corresponding daos and models.
+
+**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
+
+**TODO.** Fix 2 failing /login tests.
+
+### June 16 Update
+
+**DONE.** Set up Express server.
+
+**DONE.** Write /login tests, routes, and corresponding daos and models.
+
+**DONE.**  Write /recipe tests, routes and corresponding daos and models.
+
+**DONE.**  Write /menu tests, routes, and corresponding daos and models. (Some DAO methods can and *should* be improved.)
+
+**DONE.** Fix 2 failing /login tests.
 
 ## Self-evaluation
 
